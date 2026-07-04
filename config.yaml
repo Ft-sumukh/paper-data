@@ -1,0 +1,51 @@
+data:
+  simulated_samples: 10000
+  levels: 10
+  train_ratio: 0.7
+  val_ratio: 0.15
+  test_ratio: 0.15
+  random_seed: 42
+  target_horizons: [10, 50, 100]
+  default_horizon: 50
+  stationary_threshold: 0.0001
+  binary_classification: false
+
+features:
+  levels_to_use: [1, 5, 10]
+  default_depth: 10
+
+sequence:
+  lengths: [20, 50, 100]
+  default_length: 50
+
+lstm:
+  hidden_size: 64
+  num_layers: 2
+  dropout: 0.2
+  learning_rate: 0.001
+  batch_size: 64
+  epochs: 15
+  early_stopping_patience: 3
+
+transformer:
+  embed_dim: 64
+  num_heads: 4
+  num_layers: 2
+  dim_feedforward: 128
+  dropout: 0.1
+  learning_rate: 0.0005
+  batch_size: 64
+  epochs: 15
+  early_stopping_patience: 3
+
+backtest:
+  initial_capital: 100000.0
+  trading_fee: 0.0005        # 0.05%
+  slippage: 0.0001           # 0.01% price impact
+  min_confidence: 0.50
+
+paths:
+  results_dir: "c:/Users/sumuk/Desktop/paper/results"
+  figures_dir: "c:/Users/sumuk/Desktop/paper/figures"
+  paper_dir: "c:/Users/sumuk/Desktop/paper/paper"
+  data_dir: "c:/Users/sumuk/Desktop/paper/data"
