@@ -1,0 +1,380 @@
+ablation:
+  Basic LOB Features: 0.4021770711201349
+  Full Feature Set: 0.4321770711201349
+  OFI Only: 0.34104036784317576
+  Without OFI Features: 0.449470974920162
+  Without Positional Encoding: 0.4083736061014656
+configs:
+  backtest:
+    initial_capital: 100000.0
+    min_confidence: 0.5
+    slippage: 0.0001
+    trading_fee: !!python/object/apply:numpy._core.multiarray.scalar
+    - !!python/object/apply:numpy.dtype
+      args:
+      - f8
+      - false
+      - true
+      state: !!python/tuple
+      - 3
+      - <
+      - null
+      - null
+      - null
+      - -1
+      - -1
+      - 0
+    - !!binary |
+      +n5qvHSTaD8=
+  data:
+    binary_classification: false
+    default_horizon: 50
+    levels: 10
+    random_seed: 42
+    simulated_samples: 10000
+    stationary_threshold: 0.0001
+    target_horizons:
+    - 10
+    - 50
+    - 100
+    test_ratio: 0.15
+    train_ratio: 0.7
+    val_ratio: 0.15
+  features:
+    default_depth: 10
+    levels_to_use:
+    - 1
+    - 5
+    - 10
+  lstm:
+    batch_size: 64
+    dropout: 0.2
+    early_stopping_patience: 3
+    epochs: 15
+    hidden_size: 64
+    learning_rate: 0.001
+    num_layers: 2
+  paths:
+    data_dir: c:/Users/sumuk/Desktop/paper/data
+    figures_dir: c:/Users/sumuk/Desktop/paper/figures
+    paper_dir: c:/Users/sumuk/Desktop/paper/paper
+    results_dir: c:/Users/sumuk/Desktop/paper/results
+  sequence:
+    default_length: 50
+    lengths:
+    - 20
+    - 50
+    - 100
+  transformer:
+    batch_size: 64
+    dim_feedforward: 128
+    dropout: 0.1
+    early_stopping_patience: 3
+    embed_dim: 64
+    epochs: 15
+    learning_rate: 0.0005
+    num_heads: 4
+    num_layers: 2
+economic_sensitivity:
+  fee_threshold_bps: 15.0
+models:
+  LSTM:
+    accuracy: 0.6717451523545707
+    auc: 0.7281994238297954
+    confusion_matrix:
+    - - 545
+      - 0
+      - 99
+    - - 70
+      - 0
+      - 42
+    - - 263
+      - 0
+      - 425
+    f1_per_class:
+    - 0.7161629434954008
+    - 0.0
+    - 0.6778309409888357
+    gross_return: -7.1859999994921964e-06
+    macro_f1: 0.4646646281614122
+    macro_precision: 0.45720410720370475
+    macro_recall: 0.48800195002166696
+    max_drawdown: 0.0006344109674296737
+    net_return: -0.0006369290515639295
+    precision_per_class:
+    - 0.6207289293849658
+    - 0.0
+    - 0.7508833922261484
+    profit_factor: 0.002999247456174248
+    recall_per_class:
+    - 0.8462732919254659
+    - 0.0
+    - 0.6177325581395349
+    sharpe_ratio: -176.30405955196102
+    total_trades: 207
+    total_transaction_costs: 62.97430515643955
+    win_rate: 0.008064516129032258
+  Logistic Regression (Full):
+    accuracy: 0.7026121902210315
+    auc: 0.7698700577542725
+    confusion_matrix:
+    - - 545
+      - 0
+      - 114
+    - - 61
+      - 0
+      - 57
+    - - 212
+      - 0
+      - 504
+    f1_per_class:
+    - 0.7379823967501693
+    - 0.0
+    - 0.7246585190510424
+    gross_return: 5.481500000314554e-06
+    macro_f1: 0.48754697193373725
+    macro_precision: 0.47097527845694104
+    macro_recall: 0.5103070788933065
+    max_drawdown: 0.0008291097146243943
+    net_return: -0.0008316273081795953
+    precision_per_class:
+    - 0.6662591687041565
+    - 0.0
+    - 0.7466666666666667
+    profit_factor: 0.003209162264288864
+    recall_per_class:
+    - 0.8270106221547799
+    - 0.0
+    - 0.7039106145251397
+    sharpe_ratio: -209.11563001076647
+    total_trades: 275
+    total_transaction_costs: 83.7108808179945
+    win_rate: 0.006060606060606061
+  Logistic Regression (OFI):
+    accuracy: 0.49229738780977894
+    auc: 0.5294708072350552
+    confusion_matrix:
+    - - 347
+      - 0
+      - 312
+    - - 58
+      - 0
+      - 60
+    - - 328
+      - 0
+      - 388
+    f1_per_class:
+    - 0.4985632183908046
+    - 0.0
+    - 0.5257452574525745
+    gross_return: 6.572000000014668e-06
+    macro_f1: 0.3414361586144597
+    macro_precision: 0.3279744381417391
+    macro_recall: 0.35615160943023544
+    max_drawdown: 0.0012073788137668452
+    net_return: -0.0012073788137668452
+    precision_per_class:
+    - 0.4733969986357435
+    - 0.0
+    - 0.5105263157894737
+    profit_factor: 0.0
+    recall_per_class:
+    - 0.5265553869499241
+    - 0.0
+    - 0.5418994413407822
+    sharpe_ratio: -315.832177630808
+    total_trades: 450
+    total_transaction_costs: 121.39508137668469
+    win_rate: 0.0
+  Majority Baseline:
+    accuracy: 0.4795713328868051
+    auc: 0.5
+    confusion_matrix:
+    - - 0
+      - 0
+      - 659
+    - - 0
+      - 0
+      - 118
+    - - 0
+      - 0
+      - 716
+    f1_per_class:
+    - 0.0
+    - 0.0
+    - 0.6482571299230421
+    gross_return: 3.169999999954598e-06
+    macro_f1: 0.21608570997434737
+    macro_precision: 0.15985711096226837
+    macro_recall: 0.3333333333333333
+    max_drawdown: 1.0198979670335623e-05
+    net_return: 6.403173513535876e-07
+    precision_per_class:
+    - 0.0
+    - 0.0
+    - 0.4795713328868051
+    profit_factor: 1.0
+    recall_per_class:
+    - 0.0
+    - 0.0
+    - 1.0
+    sharpe_ratio: 2.0880082022173383
+    total_trades: 1
+    total_transaction_costs: 0.2529682648550172
+    win_rate: 0.0
+  Random Baseline:
+    accuracy: 0.4534494306764903
+    auc: 0.5
+    confusion_matrix:
+    - - 317
+      - 42
+      - 300
+    - - 51
+      - 11
+      - 56
+    - - 320
+      - 47
+      - 349
+    f1_per_class:
+    - 0.4706755753526355
+    - 0.10091743119266056
+    - 0.4912033779028853
+    gross_return: 0.0
+    macro_f1: 0.35426546148272714
+    macro_precision: 0.3552637583154654
+    macro_recall: 0.35389412434838535
+    max_drawdown: 0.0
+    net_return: 0.0
+    precision_per_class:
+    - 0.46075581395348836
+    - 0.11
+    - 0.4950354609929078
+    profit_factor: 1.0
+    recall_per_class:
+    - 0.48103186646433993
+    - 0.09322033898305085
+    - 0.48743016759776536
+    sharpe_ratio: 0.0
+    total_trades: 0
+    total_transaction_costs: 0.0
+    win_rate: 0.0
+  Random Forest:
+    accuracy: 0.6999330207635633
+    auc: 0.7426421789712009
+    confusion_matrix:
+    - - 557
+      - 0
+      - 102
+    - - 74
+      - 0
+      - 44
+    - - 228
+      - 0
+      - 488
+    f1_per_class:
+    - 0.7338603425559947
+    - 0.0
+    - 0.7229629629629629
+    macro_f1: 0.4856077685063192
+    macro_precision: 0.47271483115010365
+    macro_recall: 0.5089280920530231
+    precision_per_class:
+    - 0.6484284051222352
+    - 0.0
+    - 0.7697160883280757
+    recall_per_class:
+    - 0.8452200303490136
+    - 0.0
+    - 0.6815642458100558
+  Transformer:
+    accuracy: 0.6232686980609419
+    auc: 0.6722553880918811
+    confusion_matrix:
+    - - 471
+      - 0
+      - 173
+    - - 71
+      - 0
+      - 41
+    - - 259
+      - 0
+      - 429
+    f1_per_class:
+    - 0.6519031141868512
+    - 0.0
+    - 0.6446280991735537
+    gross_return: 1.3040499999333405e-05
+    macro_f1: 0.4321770711201349
+    macro_precision: 0.41840001708595204
+    macro_recall: 0.4516376570850787
+    max_drawdown: 0.0006748525826159445
+    net_return: -0.00067737876454863
+    precision_per_class:
+    - 0.5880149812734082
+    - 0.0
+    - 0.6671850699844479
+    profit_factor: 0.0
+    recall_per_class:
+    - 0.7313664596273292
+    - 0.0
+    - 0.623546511627907
+    sharpe_ratio: -167.63789129989985
+    total_trades: 191
+    total_transaction_costs: 69.04192645479935
+    win_rate: 0.0
+statistics:
+  ci_f1_LSTM:
+    lower: 0.4486383257730723
+    point: 0.4646646281614122
+    upper: 0.48173972425524864
+  ci_f1_Logistic Regression (Full):
+    lower: 0.4757027888942383
+    point: 0.4881494025925377
+    upper: 0.5059048149537683
+  ci_f1_Logistic Regression (OFI):
+    lower: 0.3265455066193602
+    point: 0.33941408913560206
+    upper: 0.3565403526714088
+  ci_f1_Transformer:
+    lower: 0.41352423693637647
+    point: 0.4321770711201349
+    upper: 0.4464298825943362
+  dm_lstm_vs_lr:
+    dm_stat: 4.501375976150911
+    p_value: 6.751495669421459e-06
+  dm_trans_vs_lstm:
+    dm_stat: 1.322897973405105
+    p_value: 0.1858693093775594
+  dm_trans_vs_ofi:
+    dm_stat: -3.0279331512611245
+    p_value: 0.0024623255026312574
+  mcn_lstm_vs_lr:
+    chi2_stat: 8.10727969348659
+    p_value: 0.004408783948025057
+  mcn_trans_vs_lstm:
+    chi2_stat: 12.729946524064172
+    p_value: 0.00035984683265362415
+  mcn_trans_vs_ofi:
+    chi2_stat: 58.9824
+    p_value: 1.5908858943442944e-14
+transaction_sensitivity:
+  '0.0':
+    LSTM: -0.0003879048558005889
+    Logistic Regression (Full): -0.0005006137311014754
+    Logistic Regression (OFI): -0.0007273439637001138
+    Transformer: -0.00040437314120004886
+  '10.0':
+    LSTM: -0.0008859532473288709
+    Logistic Regression (Full): -0.0011626408852600434
+    Logistic Regression (OFI): -0.0016874136638350319
+    Transformer: -0.000950384387896047
+  '20.0':
+    LSTM: -0.0013840016388575896
+    Logistic Regression (Full): -0.0018246680394194846
+    Logistic Regression (OFI): -0.0026474833639664576
+    Transformer: -0.0014963956345920451
+  '5.0':
+    LSTM: -0.0006369290515639295
+    Logistic Regression (Full): -0.0008316273081795953
+    Logistic Regression (OFI): -0.0012073788137668452
+    Transformer: -0.00067737876454863
