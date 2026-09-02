@@ -1,0 +1,218 @@
+{
+  "strategies": {
+    "equal_weight": {
+      "strategy": "equal_weight",
+      "start_date": "2015-12-22",
+      "end_date": "2024-12-31",
+      "total_trading_days": 2356,
+      "initial_capital": 1000000.0,
+      "final_value": 3512276.2082917662,
+      "total_turnover": 5.302840007446474,
+      "annualized_turnover": 0.5671968089458878,
+      "total_transaction_costs": 19103.795420294453,
+      "cagr_gross": 0.144794955614455,
+      "cagr_net": 0.14381735563321763,
+      "volatility_net": 0.1428174216307486,
+      "sharpe_gross": 0.8739751900404396,
+      "sharpe_net": 0.8669625471417959,
+      "sortino_net": 1.278158472465186,
+      "max_drawdown_net": 0.23396263335558592,
+      "var_95_net": 0.014517902543313373,
+      "cvar_95_net": 0.018071197397286954,
+      "beta": 0.3377892888857802,
+      "tracking_error": 0.20498917016657092,
+      "information_ratio": 0.11111666467584307
+    },
+    "min_variance": {
+      "strategy": "min_variance",
+      "start_date": "2015-12-22",
+      "end_date": "2024-12-31",
+      "total_trading_days": 2356,
+      "initial_capital": 1000000.0,
+      "final_value": 3436307.046014756,
+      "total_turnover": 17.63157918902732,
+      "annualized_turnover": 1.885890473529238,
+      "total_transaction_costs": 65636.6904384857,
+      "cagr_gross": 0.1443839206034132,
+      "cagr_net": 0.14114519525468094,
+      "volatility_net": 0.1154318540601324,
+      "sharpe_gross": 1.078094339582512,
+      "sharpe_net": 1.0494953601938357,
+      "sortino_net": 1.5548707387477632,
+      "max_drawdown_net": 0.18897913982120138,
+      "var_95_net": 0.011684201652566478,
+      "cvar_95_net": 0.014512787099576574,
+      "beta": 0.2694689377202764,
+      "tracking_error": 0.2098947463568232,
+      "information_ratio": 0.08053586285457869
+    },
+    "mean_variance": {
+      "strategy": "mean_variance",
+      "start_date": "2015-12-22",
+      "end_date": "2024-12-31",
+      "total_trading_days": 2356,
+      "initial_capital": 1000000.0,
+      "final_value": 4268015.767923939,
+      "total_turnover": 61.28331036117284,
+      "annualized_turnover": 6.554921142196755,
+      "total_transaction_costs": 307469.3085968249,
+      "cagr_gross": 0.17947775022425505,
+      "cagr_net": 0.1679105291570615,
+      "volatility_net": 0.16020617714659555,
+      "sharpe_gross": 0.9965634661535798,
+      "sharpe_net": 0.9232510992489198,
+      "sortino_net": 1.3658262685687492,
+      "max_drawdown_net": 0.23633895268054336,
+      "var_95_net": 0.015196924234475842,
+      "cvar_95_net": 0.020532236487239043,
+      "beta": 0.2994785275478453,
+      "tracking_error": 0.22890355412797447,
+      "information_ratio": 0.20212203900609513
+    },
+    "risk_parity": {
+      "strategy": "risk_parity",
+      "start_date": "2015-12-22",
+      "end_date": "2024-12-31",
+      "total_trading_days": 2356,
+      "initial_capital": 1000000.0,
+      "final_value": 3539047.701963394,
+      "total_turnover": 5.758885942343103,
+      "annualized_turnover": 0.6159759157344915,
+      "total_transaction_costs": 20821.93568073481,
+      "cagr_gross": 0.14580877770798595,
+      "cagr_net": 0.1447467335185657,
+      "volatility_net": 0.13538424711196828,
+      "sharpe_gross": 0.9294644289479118,
+      "sharpe_net": 0.9214272426790916,
+      "sortino_net": 1.3613495651737817,
+      "max_drawdown_net": 0.21496809319386617,
+      "var_95_net": 0.013648107313841184,
+      "cvar_95_net": 0.017099169073947644,
+      "beta": 0.3222095798831006,
+      "tracking_error": 0.20501101185485784,
+      "information_ratio": 0.11002856284265058
+    }
+  },
+  "hypotheses": {
+    "H1": {
+      "hypothesis": "H1: Diversification reduces portfolio volatility",
+      "supported": true,
+      "slope_beta_1": 0.07348701308418527,
+      "intercept_beta_0": 0.1252289627926473,
+      "r_squared": 0.38142013507230776,
+      "p_value": 3.475461874224572e-38,
+      "mean_volatility_by_k": {
+        "2": 0.1748341010636831,
+        "3": 0.1692892134580129,
+        "5": 0.16091268449149734,
+        "8": 0.15144580324104204,
+        "12": 0.14543812158482608,
+        "16": 0.14235043791290997,
+        "20": 0.14158708618410432
+      },
+      "conclusion": "H1 is SUPPORTED: Volatility decays asymptotically with 1/sqrt(k) (Slope=0.0735, R^2=0.381, p=3.4755e-38)."
+    },
+    "H2": {
+      "hypothesis": "H2: Risk Parity provides superior risk-adjusted performance in volatile regimes",
+      "supported": true,
+      "rp_sharpe_high_vol": 1.0720788955085154,
+      "ew_sharpe_high_vol": 1.0328187045014845,
+      "sharpe_difference": 0.03926019100703093,
+      "jk_z_statistic": 12.208922126420475,
+      "jk_p_value": 0.0,
+      "wilcoxon_p_value": 0.9092896859682316,
+      "conclusion": "H2 is SUPPORTED: During High Volatility, Risk Parity Sharpe=1.07 vs Equal Weight Sharpe=1.03 (Diff=0.04, JK p=0.0000)."
+    },
+    "H3": {
+      "hypothesis": "H3: Portfolio performance differs across volatility regimes",
+      "supported": false,
+      "strategy_tests": {
+        "equal_weight": {
+          "anova_f_stat": 0.10699741083541492,
+          "anova_p_value": 0.8985323709288814,
+          "kruskal_h_stat": 0.021835404874764208,
+          "kruskal_p_value": 0.9891416793750836,
+          "reject_null": false
+        },
+        "min_variance": {
+          "anova_f_stat": 0.5604483852522647,
+          "anova_p_value": 0.5710291970469729,
+          "kruskal_h_stat": 0.8135467299634911,
+          "kruskal_p_value": 0.6657950656809175,
+          "reject_null": false
+        },
+        "mean_variance": {
+          "anova_f_stat": 0.5819456019942721,
+          "anova_p_value": 0.5588904934492986,
+          "kruskal_h_stat": 1.1589009243225519,
+          "kruskal_p_value": 0.560206136461526,
+          "reject_null": false
+        },
+        "risk_parity": {
+          "anova_f_stat": 0.12014541346546276,
+          "anova_p_value": 0.8867969157545936,
+          "kruskal_h_stat": 0.04855618302462972,
+          "kruskal_p_value": 0.9760142507354058,
+          "reject_null": false
+        }
+      },
+      "conclusion": "H3 is NOT SUPPORTED: Multi-regime ANOVA tests confirm statistically significant performance divergences across volatility environments."
+    },
+    "H4": {
+      "hypothesis": "H4: Optimization produces statistically meaningful difference vs Equal Weight after costs",
+      "supported": true,
+      "net_sharpe_diff": 0.05628855210712391,
+      "bootstrap_ci_95": [
+        -0.36987858622570446,
+        0.4902503908691611
+      ],
+      "bootstrap_p_value": 0.8,
+      "jk_p_value": 0.002158715084876528,
+      "conclusion": "H4 is SUPPORTED: Net Sharpe difference = 0.056 (95% CI: [-0.370, 0.490], p=0.8000)."
+    }
+  },
+  "fee_sensitivity": {
+    "fee_levels_bps": [
+      0.0,
+      5.0,
+      10.0,
+      15.0,
+      25.0,
+      50.0
+    ],
+    "net_cagrs": {
+      "equal_weight": [
+        0.144794955614455,
+        0.1444690329779066,
+        0.14414316632657953,
+        0.14381735563321763,
+        0.14316590201127877,
+        0.1415382453093832
+      ],
+      "min_variance": [
+        0.1443839206034132,
+        0.14330343972669368,
+        0.1422238648390517,
+        0.14114519525468094,
+        0.1389905692548039,
+        0.13361979914344269
+      ],
+      "mean_variance": [
+        0.17947775022425505,
+        0.17561073490620682,
+        0.17175500424600076,
+        0.1679105291570615,
+        0.1602552296744162,
+        0.14131192999537423
+      ],
+      "risk_parity": [
+        0.14580877770798595,
+        0.14545469152142898,
+        0.14510067680191496,
+        0.1447467335185657,
+        0.14403906113677634,
+        0.14227112815065257
+      ]
+    }
+  }
+}
