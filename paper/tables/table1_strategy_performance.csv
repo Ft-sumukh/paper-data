@@ -1,0 +1,5 @@
+Strategy,Gross CAGR (%),Net CAGR (%),Net Volatility (%),Gross Sharpe,Net Sharpe,Net Sortino,Max Drawdown (%),Historical VaR 95 (%),CVaR 95 (%),Annual Turnover (%),Total Costs ($)
+Equal Weight,14.48,14.38,14.28,0.87,0.87,1.28,23.4,1.45,1.81,56.72,19103.8
+Min Variance,14.44,14.11,11.54,1.08,1.05,1.55,18.9,1.17,1.45,188.59,65636.69
+Mean Variance,17.95,16.79,16.02,1.0,0.92,1.37,23.63,1.52,2.05,655.49,307469.31
+Risk Parity,14.58,14.47,13.54,0.93,0.92,1.36,21.5,1.36,1.71,61.6,20821.94

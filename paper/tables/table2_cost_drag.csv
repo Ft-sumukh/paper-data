@@ -1,0 +1,5 @@
+Strategy,Annual Turnover (%),Total Costs Paid ($),Return Drag (bps),Sharpe Reduction
+Equal Weight,56.72,19103.8,9.8,0.007
+Min Variance,188.59,65636.69,32.4,0.029
+Mean Variance,655.49,307469.31,115.7,0.073
+Risk Parity,61.6,20821.94,10.6,0.008
