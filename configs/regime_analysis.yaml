@@ -1,0 +1,17 @@
+experiment_name: "market_regime_performance"
+description: "Cross-strategy performance and risk dynamics across volatility regimes"
+strategies:
+  - "equal_weight"
+  - "min_variance"
+  - "mean_variance"
+  - "risk_parity"
+regime_methods:
+  - "quantiles"
+  - "gmm"
+volatility_windows: [21, 63, 126]
+rebalance_frequency: "monthly"
+statistical_tests:
+  - "anova"
+  - "kruskal_wallis"
+  - "wilcoxon"
+  - "bootstrap_sharpe"

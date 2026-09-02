@@ -1,0 +1,122 @@
+project_name: "financial-portfolio-research"
+version: "1.0.0"
+random_seed: 42
+
+data:
+  # 20 liquid assets across GICS sectors, fixed income & commodities
+  assets:
+    # Information Technology
+    - symbol: "AAPL"
+      sector: "Technology"
+      name: "Apple Inc."
+    - symbol: "MSFT"
+      sector: "Technology"
+      name: "Microsoft Corporation"
+    # Financials
+    - symbol: "JPM"
+      sector: "Financials"
+      name: "JPMorgan Chase & Co."
+    - symbol: "BAC"
+      sector: "Financials"
+      name: "Bank of America Corp."
+    # Healthcare
+    - symbol: "JNJ"
+      sector: "Healthcare"
+      name: "Johnson & Johnson"
+    - symbol: "UNH"
+      sector: "Healthcare"
+      name: "UnitedHealth Group Inc."
+    # Consumer Discretionary & Staples
+    - symbol: "AMZN"
+      sector: "Consumer Discretionary"
+      name: "Amazon.com Inc."
+    - symbol: "PG"
+      sector: "Consumer Staples"
+      name: "Procter & Gamble Co."
+    - symbol: "KO"
+      sector: "Consumer Staples"
+      name: "The Coca-Cola Company"
+    # Energy
+    - symbol: "XOM"
+      sector: "Energy"
+      name: "Exxon Mobil Corp."
+    - symbol: "CVX"
+      sector: "Energy"
+      name: "Chevron Corporation"
+    # Industrials
+    - symbol: "CAT"
+      sector: "Industrials"
+      name: "Caterpillar Inc."
+    - symbol: "GE"
+      sector: "Industrials"
+      name: "General Electric Co."
+    # Utilities & Real Estate
+    - symbol: "NEE"
+      sector: "Utilities"
+      name: "NextEra Energy Inc."
+    - symbol: "AMT"
+      sector: "Real Estate"
+      name: "American Tower Corp."
+    # Materials & Communication
+    - symbol: "LIN"
+      sector: "Materials"
+      name: "Linde plc"
+    - symbol: "GOOGL"
+      sector: "Communication Services"
+      name: "Alphabet Inc."
+    # Fixed Income & Macro / Commodities
+    - symbol: "TLT"
+      sector: "Fixed Income"
+      name: "iShares 20+ Year Treasury Bond ETF"
+    - symbol: "IEF"
+      sector: "Fixed Income"
+      name: "iShares 7-10 Year Treasury Bond ETF"
+    - symbol: "GLD"
+      sector: "Commodities"
+      name: "SPDR Gold Shares"
+
+  benchmark: "SPY"
+  start_date: "2015-01-01"
+  end_date: "2024-12-31"
+  frequency: "1d"
+  price_column: "Adj Close"
+
+risk_free_rate: 0.02 # 2.0% annual
+
+costs:
+  transaction_cost_bps: 10.0 # 0.10% (10 bps)
+  slippage_bps: 5.0          # 0.05% (5 bps)
+
+backtest:
+  estimation_window: 252     # 1 year of trading days for parameter estimation
+  rebalance_frequency: "monthly" # "monthly", "quarterly", "weekly"
+  window_type: "rolling"     # "rolling" or "expanding"
+  initial_capital: 1000000.0 # $1,000,000
+
+optimization:
+  strategies:
+    - "equal_weight"
+    - "min_variance"
+    - "mean_variance"
+    - "risk_parity"
+  constraints:
+    long_only: true
+    min_weight: 0.0
+    max_weight: 0.30
+    max_sector_weight: 0.40
+  mean_variance:
+    risk_aversion: 2.5
+    target_metric: "sharpe" # "sharpe" or "quadratic_utility"
+
+regimes:
+  volatility_window: 63      # ~3 months rolling
+  method: "quantiles"        # "quantiles" or "gmm"
+  quantiles: [0.333, 0.667]
+
+paths:
+  raw_data_dir: "data/raw"
+  processed_data_dir: "data/processed"
+  metadata_dir: "data/metadata"
+  results_dir: "results"
+  figures_dir: "paper/figures"
+  tables_dir: "paper/tables"

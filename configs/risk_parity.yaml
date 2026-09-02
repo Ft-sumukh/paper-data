@@ -1,0 +1,7 @@
+experiment_name: "risk_parity_allocation"
+description: "Equal Risk Contribution (ERC) portfolio allocation and risk budgeting"
+strategy: "risk_parity"
+rebalance_frequency: "monthly"
+estimation_window: 252
+calculate_risk_contributions: true
+benchmark_comparison: ["equal_weight", "min_variance", "mean_variance"]

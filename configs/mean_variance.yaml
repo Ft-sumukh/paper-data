@@ -1,0 +1,11 @@
+experiment_name: "mean_variance_optimization"
+description: "Markowitz Mean-Variance Optimization across risk aversion levels"
+strategy: "mean_variance"
+risk_aversion_values: [1.0, 2.5, 5.0, 10.0]
+constraints:
+  long_only: true
+  min_weight: 0.0
+  max_weight: 0.25
+  max_sector_weight: 0.35
+rebalance_frequency: "monthly"
+estimation_window: 252

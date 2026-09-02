@@ -1,0 +1,9 @@
+experiment_name: "baseline_evaluation"
+description: "Equal-Weight Portfolio vs S&P 500 Buy-and-Hold Benchmark"
+strategy: "equal_weight"
+benchmark: "SPY"
+rebalance_frequency: "monthly"
+estimation_window: 252
+costs:
+  transaction_cost_bps: 10.0
+  slippage_bps: 5.0
