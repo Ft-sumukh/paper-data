@@ -1,0 +1,31 @@
+{
+  "download_timestamp": "2026-09-01T22:12:00.116935",
+  "start_date": "2015-01-01",
+  "end_date": "2024-12-31",
+  "total_trading_days": 2609,
+  "symbols_count": 21,
+  "symbols": [
+    "AAPL",
+    "AMT",
+    "AMZN",
+    "BAC",
+    "CAT",
+    "CVX",
+    "GE",
+    "GLD",
+    "GOOGL",
+    "IEF",
+    "JNJ",
+    "JPM",
+    "KO",
+    "LIN",
+    "MSFT",
+    "NEE",
+    "PG",
+    "SPY",
+    "TLT",
+    "UNH",
+    "XOM"
+  ],
+  "benchmark": "SPY"
+}
