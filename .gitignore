@@ -1,4 +1,25 @@
-data/
+# Python bytecode
 __pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Large SQLite database binary files (reproducible from data/processed via scripts/init_db.py)
+*.db
+*.sqlite3
+
+# Test and coverage
 .pytest_cache/
-results/best_*.pt
+.coverage
+htmlcov/
+
+# Output artifacts
+*.log
+results/*.pt

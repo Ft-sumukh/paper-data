@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: portfolio_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+      POSTGRES_DB: portfolio_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  api:
+    build: .
+    container_name: portfolio_api
+    restart: always
+    command: uvicorn app.api.main:app --host 0.0.0.0 --port 8000
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgrespassword@db:5432/portfolio_db
+      - APP_ENV=production
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+  dashboard:
+    build: .
+    container_name: portfolio_dashboard
+    restart: always
+    command: streamlit run app/dashboard/app.py --server.port 8501 --server.address 0.0.0.0
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgrespassword@db:5432/portfolio_db
+    ports:
+      - "8501:8501"
+    depends_on:
+      - db
+      - api
+
+volumes:
+  postgres_data:
