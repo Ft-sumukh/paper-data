@@ -44,6 +44,20 @@
       "support_s2": 1490.00,
       "resistance_r1": 1640.00,
       "resistance_r2": 1685.00
+    },
+    "HFCL": {
+      "symbol": "HFCL.NS",
+      "company": "HFCL Ltd",
+      "friday_close": 231.44,
+      "friday_range": [225.00, 231.44],
+      "rsi_14": 56.53,
+      "predicted_bias": "BULLISH_REBOUND_CONTINUATION",
+      "predicted_direction": "UP",
+      "rationale": "Strong +5.00% reversal off 38.2% Fibonacci retracement (227.57) reclaiming 20-day SMA (230.03); closed at high of the day with healthy RSI (56.5).",
+      "support_s1": 227.50,
+      "support_s2": 220.40,
+      "resistance_r1": 238.70,
+      "resistance_r2": 245.00
     }
   }
 }
