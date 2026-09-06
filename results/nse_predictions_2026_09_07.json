@@ -58,6 +58,20 @@
       "support_s2": 220.40,
       "resistance_r1": 238.70,
       "resistance_r2": 245.00
+    },
+    "WELCORP": {
+      "symbol": "WELCORP.NS",
+      "company": "Welspun Corp Ltd",
+      "friday_close": 2590.60,
+      "friday_range": [2566.00, 2662.00],
+      "rsi_14": 81.08,
+      "predicted_bias": "OVERBOUGHT_CONSOLIDATION",
+      "predicted_direction": "DOWN",
+      "rationale": "Extremely overbought 14-day RSI (81.08) following a +96% 60-day surge to 2676 peak; Friday rejected 2662 with volume declining to 0.43x 20D average.",
+      "support_s1": 2560.00,
+      "support_s2": 2520.00,
+      "resistance_r1": 2662.00,
+      "resistance_r2": 2676.00
     }
   }
 }
