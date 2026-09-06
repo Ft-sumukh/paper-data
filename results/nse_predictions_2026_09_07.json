@@ -1,0 +1,49 @@
+{
+  "date_generated": "2026-09-06",
+  "target_trade_date": "2026-09-07",
+  "exchange": "NSE",
+  "predictions": {
+    "MOREPENLAB": {
+      "symbol": "MOREPENLAB.NS",
+      "company": "Morepen Laboratories Ltd",
+      "friday_close": 113.74,
+      "friday_range": [112.55, 118.00],
+      "rsi_14": 75.52,
+      "predicted_bias": "DOWN_OR_CONSOLIDATION",
+      "predicted_direction": "DOWN",
+      "rationale": "Deeply overbought RSI > 75 with sharp rejection from 52-week peak at 118.00; short-term profit-taking likely.",
+      "support_s1": 111.70,
+      "support_s2": 107.00,
+      "resistance_r1": 118.00,
+      "resistance_r2": 120.80
+    },
+    "OMAXE": {
+      "symbol": "OMAXE.NS",
+      "company": "Omaxe Ltd",
+      "friday_close": 136.38,
+      "friday_range": [127.01, 138.89],
+      "rsi_14": 75.09,
+      "predicted_bias": "BULLISH_TESTING_RESISTANCE",
+      "predicted_direction": "UP_WITH_WHIPSAW",
+      "rationale": "Strong Friday breakout momentum (+7.14%) testing major resistance ceiling at 139-140; high ATR (7.4%) indicates extreme intraday volatility.",
+      "support_s1": 127.00,
+      "support_s2": 122.50,
+      "resistance_r1": 138.90,
+      "resistance_r2": 145.00
+    },
+    "ATHERENERG": {
+      "symbol": "ATHERENERG.NS",
+      "company": "Ather Energy Ltd",
+      "friday_close": 1584.00,
+      "friday_range": [1560.90, 1644.50],
+      "rsi_14": 59.48,
+      "predicted_bias": "CORRECTIVE_TESTING_20SMA",
+      "predicted_direction": "DOWN",
+      "rationale": "Three consecutive declining sessions from 1744 peak with above-average sell volume; testing critical 20-day SMA support at 1535-1540.",
+      "support_s1": 1535.00,
+      "support_s2": 1490.00,
+      "resistance_r1": 1640.00,
+      "resistance_r2": 1685.00
+    }
+  }
+}
