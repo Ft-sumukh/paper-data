@@ -39,6 +39,11 @@ INSTRUMENTS = {
         "name": "Welspun Corp Ltd",
         "category": "Large-Midcap Pipe & Infrastructure"
     },
+    "PCJEWELLER": {
+        "symbol": "PCJEWELLER.NS",
+        "name": "PC Jeweller Ltd",
+        "category": "Consumer Cyclical / Gems & Jewellery"
+    },
     "NIFTY50": {
         "symbol": "^NSEI",
         "name": "NIFTY 50 Benchmark Index",

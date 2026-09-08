@@ -2,7 +2,7 @@
   "generated_at": "2026-09-08",
   "target_date": "2026-09-09",
   "exchange": "NSE",
-  "instrument_count": 6,
+  "instrument_count": 7,
   "predictions": {
     "MOREPENLAB": {
       "symbol": "MOREPENLAB.NS",
@@ -241,6 +241,56 @@
         ],
         "active_regimes": [
           "OVERBOUGHT_CONTINUATION"
+        ],
+        "opening_volatility_risk": "HIGH"
+      }
+    },
+    "PCJEWELLER": {
+      "symbol": "PCJEWELLER.NS",
+      "company": "PC Jeweller Ltd",
+      "category": "Consumer Cyclical / Gems & Jewellery",
+      "last_session_date": "2026-09-08",
+      "last_close": 13.52,
+      "last_change_pct": -2.94,
+      "session_range": [
+        13.18,
+        14.44
+      ],
+      "indicators": {
+        "sma20": 10.73,
+        "sma50": 10.1,
+        "sma200": 9.36,
+        "rsi_14": 76.52,
+        "macd": 0.73,
+        "macd_signal": 0.43,
+        "macd_histogram": 0.3,
+        "atr_14": 0.85,
+        "atr_pct": 6.27,
+        "volume_ratio_20d": 3.66,
+        "bb_upper": 13.18,
+        "bb_lower": 8.27
+      },
+      "pivots": {
+        "pivot": 13.71,
+        "support_s1": 12.99,
+        "support_s2": 12.45,
+        "resistance_r1": 14.25,
+        "resistance_r2": 14.97
+      },
+      "prediction": {
+        "target_date": "2026-09-09",
+        "predicted_direction": "UP",
+        "predicted_bias": "BULLISH_MOMENTUM_CONTINUATION",
+        "confidence_score": 0.6667,
+        "expected_trading_range": [
+          12.99,
+          14.45
+        ],
+        "active_regimes": [
+          "GAP_UP",
+          "HIGH_VOLATILITY_EXPANSION",
+          "OVERBOUGHT_REVERSAL",
+          "INTRADAY_REVERSAL"
         ],
         "opening_volatility_risk": "HIGH"
       }
