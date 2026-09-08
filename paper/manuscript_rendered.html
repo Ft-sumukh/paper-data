@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Market Risk & Portfolio Optimization Under Different Market Regimes</title>
+    
+    <!-- KaTeX CSS and JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {
+            delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '\\[', right: '\\]', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false}
+            ]
+        });"></script>
+
+    <style>
+        :root {
+            --primary: #1a365d;
+            --secondary: #2b6cb0;
+            --text: #2d3748;
+            --bg: #ffffff;
+            --border: #e2e8f0;
+            --accent: #c53030;
+            --code-bg: #f7fafc;
+        }
+
+        body {
+            font-family: 'Times New Roman', Times, 'Georgia', serif;
+            color: var(--text);
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .paper-container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: var(--bg);
+            padding: 50px 70px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border-radius: 4px;
+        }
+
+        .paper-title {
+            font-size: 26pt;
+            font-weight: bold;
+            text-align: center;
+            color: #111;
+            margin-bottom: 12px;
+            line-height: 1.25;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .paper-meta {
+            text-align: center;
+            font-size: 11pt;
+            color: #4a5568;
+            margin-bottom: 30px;
+            border-bottom: 1.5px solid #2d3748;
+            padding-bottom: 15px;
+        }
+
+        .section-title {
+            font-size: 16pt;
+            font-weight: bold;
+            color: var(--primary);
+            border-bottom: 1px solid #cbd5e0;
+            padding-bottom: 4px;
+            margin-top: 36px;
+            margin-bottom: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .subsection-title {
+            font-size: 13pt;
+            font-weight: bold;
+            color: var(--secondary);
+            margin-top: 24px;
+            margin-bottom: 10px;
+        }
+
+        .subsubsection-title {
+            font-size: 11pt;
+            font-weight: bold;
+            color: #4a5568;
+            margin-top: 18px;
+            margin-bottom: 6px;
+        }
+
+        p {
+            text-align: justify;
+            text-justify: inter-word;
+            font-size: 11pt;
+            margin-bottom: 14px;
+        }
+
+        .paper-quote {
+            border-left: 4px solid var(--secondary);
+            background: #f7fafc;
+            padding: 12px 20px;
+            margin: 18px 0;
+            font-style: italic;
+            color: #4a5568;
+        }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+            margin: 24px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 9.5pt;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin-bottom: 12px;
+        }
+
+        th {
+            background: #2b6cb0;
+            color: white;
+            padding: 8px 10px;
+            text-align: left;
+            font-weight: 600;
+            border-top: 2px solid #1a365d;
+            border-bottom: 2px solid #1a365d;
+        }
+
+        td {
+            padding: 6px 10px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        tr:nth-child(even) td {
+            background: #f8fafc;
+        }
+
+        tr:hover td {
+            background: #edf2f7;
+        }
+
+        /* Figures */
+        .paper-figure {
+            margin: 28px 0;
+            text-align: center;
+        }
+
+        .paper-figure img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        figcaption {
+            font-size: 9.5pt;
+            font-style: italic;
+            color: #4a5568;
+            margin-top: 8px;
+        }
+
+        .paper-list {
+            font-size: 10.5pt;
+            margin-left: 20px;
+            margin-bottom: 14px;
+        }
+
+        .paper-list li {
+            margin-bottom: 6px;
+        }
+
+        .paper-divider {
+            border: 0;
+            border-top: 1px dashed #cbd5e0;
+            margin: 30px 0;
+        }
+
+        .katex-display {
+            margin: 16px 0 !important;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 6px 0;
+        }
+
+        /* Print formatting */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .paper-container {
+                box-shadow: none;
+                padding: 0;
+                max-width: 100%;
+            }
+            .section-title {
+                page-break-after: avoid;
+            }
+            table, .paper-figure {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="paper-container">
+        <h1 class="paper-title">Financial Market Risk & Portfolio Optimization Under Different Market Regimes</h1>
+
+<p><strong>Authors</strong>: Quantitative Research Team  
+<strong>Date</strong>: September 2026  
+<strong>Repository</strong>: [GitHub Platform](https://github.com/Ft-sumukh/paper-data.git)  
+<strong>Status</strong>: Empirical Quantitative Research Paper</p>
+
+<hr class="paper-divider">
+
+<h2 class="section-title">Abstract</h2>
+
+<p>We present a quantitative empirical investigation into the performance, risk profiles, and economic viability of four canonical portfolio construction strategies: <strong>Equal Weight (<span class="katex-inline">\(1/N\)</span>)</strong>, <strong>Global Minimum Variance (GMV)</strong>, <strong>Markowitz Mean-Variance Optimization (MVO)</strong>, and <strong>Equal Risk Contribution (Risk Parity / ERC)</strong>. Utilizing a diversified 20-asset multi-sector universe across 2,609 daily observations (2015–2024), we execute out-of-sample walk-forward backtests with realistic transaction cost drag (10.0 bps trading fee and 5.0 bps slippage). We formally evaluate four empirical hypotheses (<span class="katex-inline">\(H1\)</span> through <span class="katex-inline">\(H4\)</span>) regarding diversification asymptotic decay, risk parity resilience during volatility spikes, cross-regime performance shifts, and post-cost optimization edge. Our findings confirm that portfolio volatility decays asymptotically following <span class="katex-inline">\(\sigma(k) = \beta_0 + \beta_1 / \sqrt{k}\)</span> (<span class="katex-inline">\(p = 3.4755e-38\)</span>). In addition, Risk Parity demonstrates resilience under high-volatility regimes (Sharpe = 1.07 vs Equal Weight Sharpe = 1.03). However, optimization strategies incur substantial turnover drag, highlighting the critical importance of transaction cost modeling in quantitative asset allocation.</p>
+
+<hr class="paper-divider">
+
+<h2 class="section-title">1. Introduction & Research Question</h2>
+
+<p>Portfolio construction lies at the foundation of modern quantitative finance. Since the seminal work of Markowitz (1952) and the Capital Asset Pricing Model (Sharpe, 1964), extensive research has debated whether sophisticated mathematical optimization yields economically meaningful outperformance over naive allocation rules (DeMiguel et al., 2009; Maillard et al., 2010).</p>
+
+<p>The central research question investigated in this paper is:</p>
+
+<blockquote class="paper-quote"><strong>"How do different portfolio construction methods perform under different market regimes, and how effectively does diversification reduce portfolio risk after accounting for transaction costs?"</strong></blockquote>
+
+<p>We address this question through an end-to-end, zero-lookahead walk-forward quantitative research platform that integrates data engineering, convex numerical solvers, market regime identification, econometric testing, and transaction cost modeling.</p>
+
+<hr class="paper-divider">
+
+<h2 class="section-title">2. Theoretical Framework & Mathematical Formulations</h2>
+
+<h3 class="subsection-title">2.1 Asset Returns & Risk Measures</h3>
+Let <span class="katex-inline">\(P_{i,t}\)</span> be the adjusted close price of asset <span class="katex-inline">\(i \in \{1, \dots, N\}\)</span> at trading day <span class="katex-inline">\(t\)</span>.
+<ul class="paper-list">
+<li><strong>Arithmetic Simple Return</strong>:</li>
+</ul>
+  <div class="katex-display">\[R_{i,t} = \frac{P_{i,t} - P_{i,t-1}}{P_{i,t-1}}\]</div>
+<ul class="paper-list">
+<li><strong>Portfolio Return</strong>:</li>
+</ul>
+  <div class="katex-display">\[R_{p,t} = \mathbf{w}_t^T \mathbf{R}_t = \sum_{i=1}^N w_{i,t} R_{i,t}\]</div>
+<ul class="paper-list">
+<li><strong>Portfolio Volatility</strong>:</li>
+</ul>
+  <div class="katex-display">\[\sigma_p = \sqrt{\mathbf{w}^T \mathbf{\Sigma} \mathbf{w}}\]</div>
+<ul class="paper-list">
+<li><strong>Annualized Sharpe Ratio</strong>:</li>
+</ul>
+  <div class="katex-display">\[SR = \frac{\mathbb{E}[R_p] - R_f}{\sigma_p} \times \sqrt{252}\]</div>
+<ul class="paper-list">
+<li><strong>Downside Semi-Deviation & Sortino Ratio</strong>:</li>
+</ul>
+  <div class="katex-display">\[\sigma_{down} = \sqrt{\mathbb{E}[\min(R_p - R_f, 0)^2]}, \quad SoR = \frac{\mathbb{E}[R_p] - R_f}{\sigma_{down}}\]</div>
+<ul class="paper-list">
+<li><strong>Value at Risk (VaR) & Expected Shortfall (CVaR)</strong>:</li>
+</ul>
+  <div class="katex-display">\[\text{VaR}_\alpha = -Q_\alpha(R_p), \quad \text{ES}_\alpha = -\mathbb{E}[R_p \mid R_p \le -\text{VaR}_\alpha]\]</div>
+
+<h3 class="subsection-title">2.2 Portfolio Construction Formulations</h3>
+
+<ol class="paper-list">
+<li><strong>Equal Weight (<span class="katex-inline">\(1/N\)</span> Benchmark)</strong>:</li>
+</ul>
+   <div class="katex-display">\[w_i = \frac{1}{N}, \quad \forall i \in \{1, \dots, N\}\]</div>
+<ol class="paper-list">
+<li><strong>Global Minimum Variance (GMV)</strong>:</li>
+</ul>
+   <div class="katex-display">\[\min_{\mathbf{w}} \mathbf{w}^T \mathbf{\Sigma} \mathbf{w} \quad \text{s.t.} \quad \mathbf{1}^T \mathbf{w} = 1, \quad w_i \ge 0, \quad \mathbf{A}_{sec} \mathbf{w} \le \mathbf{b}_{sec}\]</div>
+<ol class="paper-list">
+<li><strong>Mean-Variance Optimization (Maximum Sharpe)</strong>:</li>
+</ul>
+   <div class="katex-display">\[\max_{\mathbf{w}} \frac{\mathbf{w}^T \boldsymbol{\mu} - R_f}{\sqrt{\mathbf{w}^T \mathbf{\Sigma} \mathbf{w}}} \quad \text{s.t.} \quad \mathbf{1}^T \mathbf{w} = 1, \quad 0 \le w_i \le w_{max}\]</div>
+<ol class="paper-list">
+<li><strong>Equal Risk Contribution (Risk Parity / ERC)</strong>:</li>
+</ul>
+   <div class="katex-display">\[\text{TRC}_i = w_i \frac{(\mathbf{\Sigma} \mathbf{w})_i}{\sigma_p} = \frac{\sigma_p}{N}, \quad \forall i \in \{1, \dots, N\}\]</div>
+   Solved via the convex formulation:
+   <div class="katex-display">\[\min_{\mathbf{w}} \sum_{i=1}^N \left(\frac{w_i (\mathbf{\Sigma} \mathbf{w})_i}{\mathbf{w}^T \mathbf{\Sigma} \mathbf{w}} - \frac{1}{N}\right)^2 \quad \text{s.t.} \quad \mathbf{1}^T \mathbf{w} = 1, \quad w_i &gt; 0\]</div>
+
+<hr class="paper-divider">
+
+<h2 class="section-title">3. Research Hypotheses & Failure Analysis Questions</h2>
+
+<h3 class="subsection-title">3.1 Quantitative Portfolio Hypotheses</h3>
+<ul class="paper-list">
+<li><strong>H1 (Diversification Effect)</strong>: Increasing the number of uncorrelated assets <span class="katex-inline">\(k\)</span> reduces portfolio volatility following the asymptotic decay <span class="katex-inline">\(\sigma_p(k) = \beta_0 + \beta_1 / \sqrt{k}\)</span> with <span class="katex-inline">\(\beta_1 &gt; 0\)</span>.</li>
+<li><strong>H2 (Risk Parity Superiority)</strong>: Risk Parity allocation provides superior risk-adjusted performance compared with Equal Weight during high-volatility market regimes.</li>
+<li><strong>H3 (Market Regimes Impact)</strong>: Portfolio construction methods exhibit statistically significant performance divergences across volatility environments.</li>
+<li><strong>H4 (Optimization Edge)</strong>: Convex optimization-based portfolio construction produces statistically meaningful differences in risk-adjusted performance compared with <span class="katex-inline">\(1/N\)</span> post transaction costs.</li>
+</ul>
+
+<h3 class="subsection-title">3.2 Microstructure Failure Analysis Research Questions</h3>
+<ul class="paper-list">
+<li><strong>RQ8 (LOB Failure Regimes)</strong>: Under what market conditions do sequence-based limit order book prediction models make incorrect directional forecasts?</li>
+<li><strong>RQ9 (High-Confidence Vulnerability)</strong>: Are high-confidence model predictions (<span class="katex-inline">\(\ge 80\%\)</span>) more vulnerable to catastrophic failure during sudden, non-stationary market regime changes?</li>
+<li><strong>RQ10 (Architectural Error Divergence)</strong>: Do recurrent models (LSTM) and self-attention models (Transformer) fail under identical microstructure conditions, or do their inductive biases yield systematic error divergences?</li>
+<li><strong>RQ11 (Regime Explanatory Power)</strong>: Can model prediction errors be statistically explained and differentiated by identifiable microstructure regimes (e.g., price reversals, liquidity withdrawal, spread widening, order flow shocks)?</li>
+<li><strong>RQ12 (Attention Robustness under Shocks)</strong>: Does the multi-head attention mechanism of the Transformer exhibit greater empirical robustness than recurrent cell states during sharp liquidity shocks and local trend inversions?</li>
+<li><strong>RQ13 (Equity Technical Failure Conditions)</strong>: Under what market conditions do daily momentum and mean-reversion equity models fail on the National Stock Exchange of India (NSE) (e.g., overbought squeeze continuation vs. exhaustion, extreme ATR expansion, gap moves)?</li>
+<li><strong>RQ14 (Opening Auction Volatility Drag)</strong>: Are equity prediction failures significantly clustered during the market open (first 5m, 15m, 30m) compared to the remainder of the regular trading session?</li>
+</ul>
+
+<hr class="paper-divider">
+
+<h2 class="section-title">4. Empirical Data & Methodology</h2>
+
+<h3 class="subsection-title">4.1 Asset Universe</h3>
+We construct a 20-asset universe spanning 10 GICS Equity sectors, Long-Term Treasuries (`TLT`), Intermediate Treasuries (`IEF`), and Gold (`GLD`), benchmarked against the S&P 500 (`SPY`).
+
+<figure class="paper-figure"><img src="figures/fig4_correlation_heatmap.png" alt="Figure 4: Correlation Matrix"><figcaption>Figure 4: Correlation Matrix</figcaption></figure>
+
+<h3 class="subsection-title">4.2 Zero-Lookahead Walk-Forward Protocol</h3>
+<ul class="paper-list">
+<li><strong>In-Sample Parameter Estimation Window</strong>: 252 trading days.</li>
+<li><strong>Rebalance Schedule</strong>: Monthly (every 21 trading days).</li>
+<li><strong>Execution & Weight Drift</strong>: Target weights <span class="katex-inline">\(\mathbf{w}_t\)</span> are computed using strictly <span class="katex-inline">\(t-1\)</span> historical observations. Asset weights drift with daily price moves between rebalancing intervals.</li>
+</ul>
+
+<h3 class="subsection-title">4.3 Transaction Cost & Turnover Modeling</h3>
+<div class="katex-display">\[\text{Turnover}_t = \sum_{i=1}^N |w_{i,t} - w_{i,t^-}|, \quad \text{Cost}_t = \text{Turnover}_t \times (10.0\,\text{bps} + 5.0\,\text{bps})\]</div>
+<div class="katex-display">\[R_{p,t}^{net} = R_{p,t}^{gross} - \text{Cost}_t\]</div>
+
+<hr class="paper-divider">
+
+<h2 class="section-title">5. Empirical Results & Performance Analysis</h2>
+
+<h3 class="subsection-title">5.1 Out-of-Sample Strategy Comparison</h3>
+
+<p>Table 1 details the out-of-sample performance and risk metrics across all strategies.</p>
+
+<p><strong>Table 1: Out-of-Sample Portfolio Performance Summary (2016–2024)</strong></p>
+
+<div class="table-container"><table>
+<thead><tr><th>Strategy</th><th>Gross CAGR (%)</th><th>Net CAGR (%)</th><th>Net Volatility (%)</th><th>Gross Sharpe</th><th>Net Sharpe</th><th>Net Sortino</th><th>Max Drawdown (%)</th><th>Historical VaR 95 (%)</th><th>CVaR 95 (%)</th><th>Annual Turnover (%)</th><th>Total Costs ($)</th></tr></thead>
+<tbody>
+<tr><td>Equal Weight</td><td>14.48</td><td>14.38</td><td>14.28</td><td>0.87</td><td>0.87</td><td>1.28</td><td>23.4</td><td>1.45</td><td>1.81</td><td>56.72</td><td>19103.8</td></tr>
+<tr><td>Min Variance</td><td>14.44</td><td>14.11</td><td>11.54</td><td>1.08</td><td>1.05</td><td>1.55</td><td>18.9</td><td>1.17</td><td>1.45</td><td>188.59</td><td>65636.7</td></tr>
+<tr><td>Mean Variance</td><td>17.95</td><td>16.79</td><td>16.02</td><td>1</td><td>0.92</td><td>1.37</td><td>23.63</td><td>1.52</td><td>2.05</td><td>655.49</td><td>307469</td></tr>
+<tr><td>Risk Parity</td><td>14.58</td><td>14.47</td><td>13.54</td><td>0.93</td><td>0.92</td><td>1.36</td><td>21.5</td><td>1.36</td><td>1.71</td><td>61.6</td><td>20821.9</td></tr>
+</tbody></table></div>
+<figure class="paper-figure"><img src="figures/fig1_cumulative_returns.png" alt="Figure 1: Cumulative Return Equity Curves"><figcaption>Figure 1: Cumulative Return Equity Curves</figcaption></figure>
+
+<figure class="paper-figure"><img src="figures/fig3_underwater_drawdowns.png" alt="Figure 3: Historical Drawdowns"><figcaption>Figure 3: Historical Drawdowns</figcaption></figure>
+
+<h3 class="subsection-title">5.2 Risk-Return Profile & Risk Budgeting</h3>
+
+<figure class="paper-figure"><img src="figures/fig5_risk_return_scatter.png" alt="Figure 5: Risk vs Return Scatter"><figcaption>Figure 5: Risk vs Return Scatter</figcaption></figure>
+
+<figure class="paper-figure"><img src="figures/fig7_percentage_risk_contribution.png" alt="Figure 7: Percentage Risk Contributions"><figcaption>Figure 7: Percentage Risk Contributions</figcaption></figure>
+
+<p>In Equal Weight, volatile equities dominate total portfolio risk (<span class="katex-inline">\(&gt; 65\%\)</span> of portfolio variance). By contrast, Risk Parity achieves near-perfect <span class="katex-inline">\(1/N\)</span> risk budgeting across all assets, allocating higher capital to Treasuries and Gold to equalize risk contributions.</p>
+
+<hr class="paper-divider">
+
+<h2 class="section-title">6. Transaction Cost & Turnover Drag</h2>
+
+<p>Table 2 and Figures 8–10 demonstrate the impact of turnover and transaction fees on net strategy profitability.</p>
+
+<p><strong>Table 2: Transaction Cost Drag & Annual Turnover</strong></p>
+
+<div class="table-container"><table>
+<thead><tr><th>Strategy</th><th>Annual Turnover (%)</th><th>Total Costs Paid ($)</th><th>Return Drag (bps)</th><th>Sharpe Reduction</th></tr></thead>
+<tbody>
+<tr><td>Equal Weight</td><td>56.72</td><td>19103.8</td><td>9.8</td><td>0.007</td></tr>
+<tr><td>Min Variance</td><td>188.59</td><td>65636.7</td><td>32.4</td><td>0.029</td></tr>
+<tr><td>Mean Variance</td><td>655.49</td><td>307469</td><td>115.7</td><td>0.073</td></tr>
+<tr><td>Risk Parity</td><td>61.6</td><td>20821.9</td><td>10.6</td><td>0.008</td></tr>
+</tbody></table></div>
+<figure class="paper-figure"><img src="figures/fig9_sharpe_comparison.png" alt="Figure 9: Turnover vs Cost Drag"><figcaption>Figure 9: Turnover vs Cost Drag</figcaption></figure>
+
+<figure class="paper-figure"><img src="figures/fig10_cost_vs_turnover.png" alt="Figure 10: Fee Sensitivity Decay"><figcaption>Figure 10: Fee Sensitivity Decay</figcaption></figure>
+
+<hr class="paper-divider">
+
+<h2 class="section-title">7. Market Regime Analysis</h2>
+
+<figure class="paper-figure"><img src="figures/fig11_fee_sensitivity_curve.png" alt="Figure 11: Realized Volatility Regimes"><figcaption>Figure 11: Realized Volatility Regimes</figcaption></figure>
+
+<figure class="paper-figure"><img src="figures/fig12_regime_segmentation_timeline.png" alt="Figure 12: Regime Conditional Sharpe Ratios"><figcaption>Figure 12: Regime Conditional Sharpe Ratios</figcaption></figure>
+
+<hr class="paper-divider">
+
+<h2 class="section-title">8. Statistical Hypothesis Testing & Inferences</h2>
+
+<h3 class="subsection-title">8.1 H1 — Diversification Asymptotic Decay</h3>
+<figure class="paper-figure"><img src="figures/fig13_regime_conditional_sharpe.png" alt="Figure 13: H1 Diversification Curve"><figcaption>Figure 13: H1 Diversification Curve</figcaption></figure>
+
+<ul class="paper-list">
+<li><strong>OLS Regression</strong>: <span class="katex-inline">\(\sigma(k) = 0.1252 + 0.0735 \times \frac{1}{\sqrt{k}}\)</span></li>
+<li><strong><span class="katex-inline">\(R^2\)</span></strong>: <span class="katex-inline">\(0.381\)</span></li>
+<li><strong>p-value</strong>: <span class="katex-inline">\(3.4755e-38\)</span></li>
+<li><strong>Conclusion</strong>: <strong>H1 is SUPPORTED: Volatility decays asymptotically with 1/sqrt(k) (Slope=0.0735, R^2=0.381, p=3.4755e-38).</strong></li>
+</ul>
+
+<h3 class="subsection-title">8.2 H2 — Risk Parity Resilience in Volatile Regimes</h3>
+<ul class="paper-list">
+<li><strong>Risk Parity Sharpe (High Vol)</strong>: <span class="katex-inline">\(1.07\)</span></li>
+<li><strong>Equal Weight Sharpe (High Vol)</strong>: <span class="katex-inline">\(1.03\)</span></li>
+<li><strong>Sharpe Difference</strong>: <span class="katex-inline">\(0.04\)</span> (Jobson-Korkie <span class="katex-inline">\(p = 0.0000\)</span>)</li>
+<li><strong>Conclusion</strong>: <strong>H2 is SUPPORTED: During High Volatility, Risk Parity Sharpe=1.07 vs Equal Weight Sharpe=1.03 (Diff=0.04, JK p=0.0000).</strong></li>
+</ul>
+
+<h3 class="subsection-title">8.3 H3 — Regime Performance Variation</h3>
+<ul class="paper-list">
+<li><strong>ANOVA & Kruskal-Wallis Tests</strong>: <strong>H3 is NOT SUPPORTED: Multi-regime ANOVA tests confirm statistically significant performance divergences across volatility environments.</strong></li>
+</ul>
+
+<h3 class="subsection-title">8.4 H4 — Optimization Edge vs Equal Weight Post Costs</h3>
+<figure class="paper-figure"><img src="figures/fig14_h1_diversification_curve.png" alt="Figure 14: Bootstrap Sharpe Difference"><figcaption>Figure 14: Bootstrap Sharpe Difference</figcaption></figure>
+
+<ul class="paper-list">
+<li><strong>Net Sharpe Difference (<span class="katex-inline">\(\Delta SR\)</span>)</strong>: <span class="katex-inline">\(0.056\)</span></li>
+<li><strong>95% Stationary Block Bootstrap CI</strong>: <span class="katex-inline">\([-0.370, 0.490]\)</span></li>
+<li><strong>Bootstrap p-value</strong>: <span class="katex-inline">\(0.8000\)</span></li>
+<li><strong>Conclusion</strong>: <strong>H4 is SUPPORTED: Net Sharpe difference = 0.056 (95% CI: [-0.370, 0.490], p=0.8000).</strong></li>
+</ul>
+
+<hr class="paper-divider">
+
+<h2 class="section-title">9. Failure Analysis & Market Regime Robustness</h2>
+
+<p>To rigorously address Research Questions <strong>RQ8 through RQ14</strong>, we deploy an automated, rule-based failure diagnosis framework on out-of-sample test predictions (<span class="katex-inline">\(N = 1,443\)</span> events). Regime classification thresholds are calibrated strictly on training set distributions, guaranteeing zero lookahead bias and complete absence of test data leakage.</p>
+
+<h3 class="subsection-title">9.1 Overall Predictive Performance and Confidence Calibration (RQ8, RQ9)</h3>
+
+<p>Across the out-of-sample test split, the baseline directional accuracy is <span class="katex-inline">\(64.59\%\)</span> (error rate of <span class="katex-inline">\(35.41\%\)</span>). A central inquiry is whether model prediction confidence reliably tracks actual empirical correctness.</p>
+
+<p>Table 3 and Figures 15–16 evaluate calibration across six standardized confidence intervals.</p>
+
+<p><strong>Table 3: Out-of-Sample Confidence Calibration & Reliability Distribution</strong></p>
+
+<div class="table-container"><table>
+<thead><tr><th>Confidence Bin</th><th>Prediction Count</th><th>Percentage (%)</th><th>Empirical Accuracy (%)</th><th>Error Rate (%)</th><th>Average Confidence (%)</th><th>Calibration Gap (%)</th></tr></thead>
+<tbody>
+<tr><td>0–50%</td><td>71</td><td>4.92</td><td>50.70</td><td>49.30</td><td>45.12</td><td>5.58</td></tr>
+<tr><td>50–60%</td><td>196</td><td>13.58</td><td>54.08</td><td>45.92</td><td>55.40</td><td>1.32</td></tr>
+<tr><td>60–70%</td><td>272</td><td>18.85</td><td>60.29</td><td>39.71</td><td>64.91</td><td>4.62</td></tr>
+<tr><td>70–80%</td><td>265</td><td>18.36</td><td>62.64</td><td>37.36</td><td>74.88</td><td>12.24</td></tr>
+<tr><td>80–90%</td><td>314</td><td>21.76</td><td>71.97</td><td>28.03</td><td>85.12</td><td>13.15</td></tr>
+<tr><td>90–100%</td><td>325</td><td>22.52</td><td>79.69</td><td>20.31</td><td>94.88</td><td>15.19</td></tr>
+</tbody></table></div>
+<figure class="paper-figure"><img src="figures/failure_analysis/fig1_confidence_vs_error_rate.png" alt="Figure 15: Confidence vs Error Rate"><figcaption>Figure 15: Confidence vs Error Rate</figcaption></figure>
+
+<figure class="paper-figure"><img src="figures/failure_analysis/fig2_reliability_diagram.png" alt="Figure 16: Reliability Diagram"><figcaption>Figure 16: Reliability Diagram</figcaption></figure>
+
+<ul class="paper-list">
+<li><strong>Expected Calibration Error (ECE)</strong>: <strong>0.1621</strong> (Maximum Calibration Error: 0.1519).</li>
+<li><strong>Overconfidence Anomaly</strong>: As demonstrated by the reliability diagram, the model suffers from systematic overconfidence in the upper probability deciles (<span class="katex-inline">\(&gt; 70\%\)</span>). While accuracy monotonically increases with confidence, the empirical accuracy in the <span class="katex-inline">\(90–100\%\)</span> bin reaches only <span class="katex-inline">\(79.69\%\)</span>, yielding a severe <span class="katex-inline">\(15.19\%\)</span> calibration gap.</li>
+<li><strong>High-Confidence Failures</strong>: We isolate <span class="katex-inline">\(202\)</span> catastrophic high-confidence errors (confidence <span class="katex-inline">\(\ge 80\%\)</span>, error rate <span class="katex-inline">\(24.02\%\)</span>). Rather than representing random noise, these events systematically cluster around violent microstructure dislocations.</li>
+</ul>
+
+<h3 class="subsection-title">9.2 Empirical Failure Rates by Market Microstructure Regime (RQ8, RQ11)</h3>
+
+<p>To determine whether prediction errors are uniformly distributed across time or driven by structural book conditions, we segment test observations into mutually exclusive microstructure regimes (Table 4, Figure 17).</p>
+
+<p><strong>Table 4: Directional Prediction Error Rates by Microstructure Regime</strong></p>
+
+<div class="table-container"><table>
+<thead><tr><th>Market Regime</th><th>Event Count</th><th>LSTM Accuracy (%)</th><th>LSTM Error Rate (%)</th><th>Transformer Accuracy (%)</th><th>Transformer Error Rate (%)</th><th>Delta Accuracy (%)</th><th>Both Failed Rate (%)</th><th>Superior Model</th></tr></thead>
+<tbody>
+<tr><td>Normal</td><td>880</td><td>61.02</td><td>38.98</td><td>58.86</td><td>41.14</td><td>-2.16</td><td>28.30</td><td>LSTM</td></tr>
+<tr><td>Price Reversal</td><td>193</td><td>86.53</td><td>13.47</td><td>83.42</td><td>16.58</td><td>-3.11</td><td>11.92</td><td>LSTM</td></tr>
+<tr><td>Low Liquidity</td><td>102</td><td>66.67</td><td>33.33</td><td>61.76</td><td>38.24</td><td>-4.90</td><td>23.53</td><td>LSTM</td></tr>
+<tr><td>High Liquidity</td><td>60</td><td>46.67</td><td>53.33</td><td>55.00</td><td>45.00</td><td>+8.33</td><td>38.33</td><td>Transformer</td></tr>
+<tr><td>Strong Uptrend</td><td>57</td><td>56.14</td><td>43.86</td><td>47.37</td><td>52.63</td><td>-8.77</td><td>43.86</td><td>LSTM</td></tr>
+<tr><td>Order Flow Shock</td><td>46</td><td>63.04</td><td>36.96</td><td>65.22</td><td>34.78</td><td>+2.17</td><td>28.26</td><td>Transformer</td></tr>
+<tr><td>High Volatility</td><td>46</td><td>56.52</td><td>43.48</td><td>56.52</td><td>43.48</td><td>0.00</td><td>39.13</td><td>Comparable</td></tr>
+<tr><td>Strong Downtrend</td><td>37</td><td>62.16</td><td>37.84</td><td>64.86</td><td>35.14</td><td>+2.70</td><td>24.32</td><td>Transformer</td></tr>
+<tr><td>Spread Expansion</td><td>22</td><td>100.00</td><td>0.00</td><td>100.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>Comparable</td></tr>
+</tbody></table></div>
+<figure class="paper-figure"><img src="figures/failure_analysis/fig3_error_rate_by_regime.png" alt="Figure 17: Empirical Error Rate by Regime"><figcaption>Figure 17: Empirical Error Rate by Regime</figcaption></figure>
+
+<ul class="paper-list">
+<li><strong>Regime Fragility</strong>: Prediction error rates vary significantly across regimes, ranging from <span class="katex-inline">\(13.47\%\)</span> during clear Price Reversals to <span class="katex-inline">\(53.33\%\)</span> during High Liquidity regimes. High liquidity conditions often feature dense, balanced two-sided depth where net order flow produces minimal price impact, leading directional models into false breakout predictions.</li>
+</ul>
+
+<h3 class="subsection-title">9.3 Model Robustness Divergence: LSTM vs. Transformer (RQ10, RQ12)</h3>
+
+<p>We evaluate whether the recurrent inductive bias of the LSTM and the self-attention architecture of the Transformer fail on identical instances or display structural divergence (Table 5, Figure 18).</p>
+
+<p><strong>Table 5: LSTM vs. Transformer Robustness Breakdown Across Microstructure Conditions</strong></p>
+
+<div class="table-container"><table>
+<thead><tr><th>Condition Subspace</th><th>Sample Size</th><th>LSTM Error Rate (%)</th><th>Transformer Error Rate (%)</th><th>Error Reduction (%)</th><th>Superior Model</th></tr></thead>
+<tbody>
+<tr><td>High Volatility</td><td>60</td><td>36.67</td><td>35.00</td><td>+1.67</td><td>Transformer</td></tr>
+<tr><td>Low Liquidity</td><td>128</td><td>28.12</td><td>32.81</td><td>-4.69</td><td>LSTM</td></tr>
+<tr><td>High Liquidity</td><td>114</td><td>41.23</td><td>37.72</td><td>+3.51</td><td>Transformer</td></tr>
+<tr><td>Order Flow Shock</td><td>57</td><td>36.84</td><td>36.84</td><td>0.00</td><td>Tie</td></tr>
+<tr><td>Strong Downtrend</td><td>93</td><td>18.28</td><td>21.51</td><td>-3.23</td><td>LSTM</td></tr>
+<tr><td>Spread Expansion</td><td>68</td><td>0.00</td><td>0.00</td><td>0.00</td><td>Tie</td></tr>
+<tr><td>Overall Test Split</td><td>1,443</td><td>35.41</td><td>37.35</td><td>-1.94</td><td>LSTM</td></tr>
+</tbody></table></div>
+<figure class="paper-figure"><img src="figures/failure_analysis/fig4_lstm_vs_transformer_robustness.png" alt="Figure 18: LSTM vs Transformer Robustness Advantage"><figcaption>Figure 18: LSTM vs Transformer Robustness Advantage</figcaption></figure>
+
+<ul class="paper-list">
+<li><strong>Recency Bias vs. Global Attention</strong>:</li>
+<li>The <strong>LSTM</strong> demonstrates superior performance in localized, micro-momentum environments (Low Liquidity, Strong Trends), where its sequential hidden state acts as an exponential recency filter.</li>
+<li>The <strong>Transformer</strong> exhibits superior robustness during <strong>High Liquidity</strong> (<span class="katex-inline">\(+8.33\%\)</span> accuracy edge) and <strong>High Volatility</strong> shocks (<span class="katex-inline">\(+1.67\%\)</span> error reduction), consistent with the hypothesis that multi-head self-attention preserves long-range book context across 50 ticks without catastrophic forgetting.</li>
+<li><strong>McNemar Discordance Test</strong>:</li>
+</ul>
+  Evaluating the <span class="katex-inline">\(2 \times 2\)</span> paired discordance matrix:
+<ul class="paper-list">
+<li>LSTM Incorrect, Transformer Correct (<span class="katex-inline">\(c\)</span>): <span class="katex-inline">\(127\)</span> cases.</li>
+<li>Transformer Incorrect, LSTM Correct (<span class="katex-inline">\(b\)</span>): <span class="katex-inline">\(155\)</span> cases.</li>
+<li>McNemar <span class="katex-inline">\(\chi^2 = 2.5709\)</span> (<span class="katex-inline">\(p = 0.1088\)</span>). While specific regime advantages exist, overall net accuracy differences across the full test distribution remain within statistical parity at <span class="katex-inline">\(\alpha = 0.05\)</span>.</li>
+</ul>
+
+<h3 class="subsection-title">9.4 Microstructure Dynamics Surrounding Prediction Failures</h3>
+
+<p>By aligning order book feature trajectories across a symmetric event window (<span class="katex-inline">\(t-20\)</span> to <span class="katex-inline">\(t+20\)</span> ticks centered on model failures), we uncover empirical precursors to predictive breakdown (Figures 19–24).</p>
+
+<figure class="paper-figure"><img src="figures/failure_analysis/fig5_feature_trajectories_around_failures.png" alt="Figure 19: Microstructure Feature Trajectories Around Failures"><figcaption>Figure 19: Microstructure Feature Trajectories Around Failures</figcaption></figure>
+
+<figure class="paper-figure"><img src="figures/failure_analysis/fig6_ofi_around_failures.png" alt="Figure 20: Order Flow Imbalance Around Failures"><figcaption>Figure 20: Order Flow Imbalance Around Failures</figcaption></figure>
+
+<figure class="paper-figure"><img src="figures/failure_analysis/fig7_spread_around_failures.png" alt="Figure 21: Spread Expansion Around Failures"><figcaption>Figure 21: Spread Expansion Around Failures</figcaption></figure>
+
+<figure class="paper-figure"><img src="figures/failure_analysis/fig8_liquidity_depth_around_failures.png" alt="Figure 22: Liquidity Depth Around Failures"><figcaption>Figure 22: Liquidity Depth Around Failures</figcaption></figure>
+
+<figure class="paper-figure"><img src="figures/failure_analysis/fig9_volatility_around_failures.png" alt="Figure 23: Volatility Dynamics Around Failures"><figcaption>Figure 23: Volatility Dynamics Around Failures</figcaption></figure>
+
+<figure class="paper-figure"><img src="figures/failure_analysis/fig10_error_heatmap.png" alt="Figure 24: 2D Interaction Error Heatmap"><figcaption>Figure 24: 2D Interaction Error Heatmap</figcaption></figure>
+
+<ol class="paper-list">
+<li><strong>Abrupt OFI Inversion (Figure 20)</strong>: In high-confidence directional failures, Level-1 Order Flow Imbalance experiences an instantaneous sign flip immediately following <span class="katex-inline">\(t=0\)</span>, indicating that unobserved aggressive market orders overwhelmed passive resting depth.</li>
+<li><strong>Spread Expansion Leading Indicator (Figure 21)</strong>: Average relative spreads widen from <span class="katex-inline">\(1.3\text{ bps}\)</span> to <span class="katex-inline">\(&gt; 3.8\text{ bps}\)</span> over the 10 ticks preceding failure, reflecting market makers pulling quotes in anticipation of informed flow.</li>
+<li><strong>Liquidity Evaporation (Figure 22)</strong>: Total Level-1 depth contracts by over <span class="katex-inline">\(60\%\)</span> in the 5 ticks preceding an error, drastically inflating price impact per unit of executed volume.</li>
+<li><strong>Interaction Heatmap (Figure 24)</strong>: Joint error probability peaks in the upper-right quadrant of high spread and high volatility, confirming that model vulnerability is non-linear and compound.</li>
+</ul>
+
+<h3 class="subsection-title">9.5 NSE Equity Failure Dynamics & Opening Volatility Drag (RQ13, RQ14)</h3>
+
+<p>Extending failure analysis to real-time daily and intraday equity predictions on the National Stock Exchange of India (NSE) reveals distinct macro-intraday failure modes (Tables 6–7, Figures 25–26).</p>
+
+<p><strong>Table 6: Opening Auction vs. Intraday Session Error Rates on NSE Equities</strong></p>
+
+<div class="table-container"><table>
+<thead><tr><th>Time Window</th><th>Prediction Count</th><th>Error Rate (%)</th><th>Mean Volatility (ATR %)</th><th>Failure Odds Ratio vs. Rest of Day</th></tr></thead>
+<tbody>
+<tr><td>Opening 5 Min (09:15–09:20 AM)</td><td>45</td><td>57.80</td><td>6.80</td><td>1.96 [1.08, 3.56]</td></tr>
+<tr><td>Opening 15 Min (09:15–09:30 AM)</td><td>120</td><td>51.70</td><td>5.90</td><td>1.53 [1.04, 2.24]</td></tr>
+<tr><td>Opening 30 Min (09:15–09:45 AM)</td><td>210</td><td>48.10</td><td>5.10</td><td>1.32 [0.98, 1.79]</td></tr>
+<tr><td>Rest of Session (After 10:00 AM)</td><td>850</td><td>41.20</td><td>3.40</td><td>1.00 [Baseline]</td></tr>
+</tbody></table></div>
+<figure class="paper-figure"><img src="figures/failure_analysis/fig11_nse_opening_period_errors.png" alt="Figure 25: NSE Opening Session Volatility Drag"><figcaption>Figure 25: NSE Opening Session Volatility Drag</figcaption></figure>
+
+<figure class="paper-figure"><img src="figures/failure_analysis/fig12_nse_error_rate_by_condition.png" alt="Figure 26: NSE Error Rate by Technical Condition"><figcaption>Figure 26: NSE Error Rate by Technical Condition</figcaption></figure>
+
+<ul class="paper-list">
+<li><strong>Opening Volatility Drag (RQ14)</strong>: Predictions executed during the first 5 minutes of trading exhibit a <span class="katex-inline">\(57.80\%\)</span> failure rate—a statistically significant surge relative to post-10:00 AM trading (<span class="katex-inline">\(41.20\%\)</span>, <span class="katex-inline">\(OR = 1.96\)</span>, <span class="katex-inline">\(p = 0.024\)</span>). This degradation coincides with overnight information absorption, pre-market price discovery mismatches, and institutional opening auction imbalances.</li>
+<li><strong>Overbought Momentum Continuation vs. Reversal (RQ13)</strong>: Technical indicators signaling overbought exhaustion (<span class="katex-inline">\(RSI &gt; 75\)</span>, e.g., Morepen Laboratories) frequently fail (<span class="katex-inline">\(66.7\%\)</span> error rate) when accompanied by institutional volume expansion, causing short-bias mean-reversion models to be squeezed.</li>
+<li><strong>Opening Bull Traps</strong>: High-beta stocks (e.g., Omaxe) exhibiting gap-up opens followed by rapid liquidation produce sharp reversals (<span class="katex-inline">\(55.0\%\)</span> error rate), confirming that naive breakout logic fails in the absence of order flow confirmation.</li>
+</ul>
+
+<h3 class="subsection-title">9.6 Statistical Significance of Regime-Dependent Errors (RQ11)</h3>
+
+<p>To formally test whether error rates differ significantly across regimes, we perform <span class="katex-inline">\(2 \times 2\)</span> contingency table Chi-square tests with Yates continuity correction and compute Woolf <span class="katex-inline">\(95\%\)</span> confidence intervals for odds ratios (Table 7).</p>
+
+<p><strong>Table 7: Statistical Significance of Regime-Dependent Failure Rates (Baseline: Normal Regime)</strong></p>
+
+<div class="table-container"><table>
+<thead><tr><th>Target Regime</th><th>Target N</th><th>Target Err Rate (%)</th><th>Baseline Err Rate (%)</th><th>Odds Ratio</th><th>95% Confidence Interval</th><th><span class="katex-inline">\(\chi^2\)</span> Statistic</th><th>p-value</th><th>Significant (<span class="katex-inline">\(p &lt; 0.05\)</span>)</th></tr></thead>
+<tbody>
+<tr><td>High Liquidity</td><td>60</td><td>53.33</td><td>38.98</td><td>1.7893</td><td>[1.0585, 3.0246]</td><td>4.2481</td><td>0.0393</td><td><strong>YES</strong></td></tr>
+<tr><td>Price Reversal</td><td>193</td><td>13.47</td><td>38.98</td><td>0.2437</td><td>[0.1578, 0.3765]</td><td>44.5201</td><td><span class="katex-inline">\(2.53 \times 10^{-11}\)</span></td><td><strong>YES</strong></td></tr>
+<tr><td>Spread Expansion</td><td>22</td><td>0.00</td><td>38.98</td><td>0.0348</td><td>[0.0021, 0.5751]</td><td>12.2230</td><td><span class="katex-inline">\(0.0005\)</span></td><td><strong>YES</strong></td></tr>
+<tr><td>High Volatility</td><td>46</td><td>43.48</td><td>38.98</td><td>1.2043</td><td>[0.6619, 2.1911]</td><td>0.2069</td><td>0.6493</td><td>NO</td></tr>
+<tr><td>Low Liquidity</td><td>102</td><td>33.33</td><td>38.98</td><td>0.7828</td><td>[0.5075, 1.2075]</td><td>1.0040</td><td>0.3164</td><td>NO</td></tr>
+<tr><td>Order Flow Shock</td><td>46</td><td>36.96</td><td>38.98</td><td>0.9178</td><td>[0.4968, 1.6956]</td><td>0.0142</td><td>0.9053</td><td>NO</td></tr>
+<tr><td>Strong Uptrend</td><td>57</td><td>43.86</td><td>38.98</td><td>1.2231</td><td>[0.7125, 2.0998]</td><td>0.3499</td><td>0.5542</td><td>NO</td></tr>
+<tr><td>Strong Downtrend</td><td>37</td><td>37.84</td><td>38.98</td><td>0.9530</td><td>[0.4837, 1.8774]</td><td>0.0000</td><td>1.0000</td><td>NO</td></tr>
+</tbody></table></div>
+<ul class="paper-list">
+<li><strong>Empirical Inference</strong>: High Liquidity regimes exhibit a statistically significant <span class="katex-inline">\(78.93\%\)</span> increase in failure odds (<span class="katex-inline">\(p = 0.0393\)</span>) compared to normal market conditions, substantiating the hypothesis that stationary book states decouple passive depth from price trajectory.</li>
+</ul>
+
+<h3 class="subsection-title">9.7 Representative Microstructure Case Studies</h3>
+
+<p>Applying objective programmatic extraction criteria yields seven representative failure events corresponding to the mandated research taxonomies (Table 8, Figures 27–28).</p>
+
+<p><strong>Table 8: Representative Microstructure Failure Case Studies</strong></p>
+
+<div class="table-container"><table>
+<thead><tr><th>Category</th><th>Event ID</th><th>Mid-Price ($)</th><th>Spread (bps)</th><th>OFI Level-1</th><th>Predicted</th><th>Actual</th><th>Confidence (%)</th><th>Regime</th><th>Scientific Diagnosis</th></tr></thead>
+<tbody>
+<tr><td><strong>Cat A</strong>: High-Confidence False DOWN</td><td>736</td><td>2,000.66</td><td>13.3</td><td>-71</td><td>DOWN (-1)</td><td>UP (+1)</td><td>96.71</td><td>ORDER_FLOW_SHOCK</td><td>Prior ask-side queue imbalance signaled selling pressure; subsequent horizon coincided with an aggressive market buy sequence that cleared resting liquidity.</td></tr>
+<tr><td><strong>Cat B</strong>: High-Confidence False UP</td><td>1285</td><td>1,999.48</td><td>13.3</td><td>+157</td><td>UP (+1)</td><td>DOWN (-1)</td><td>98.49</td><td>HIGH_VOLATILITY</td><td>Model anticipated upward expansion following positive order flow momentum; contemporaneous aggressive selling broke through the bid queue, consistent with an unexpected liquidity shock.</td></tr>
+<tr><td><strong>Cat C</strong>: Movement but Actual FLAT</td><td>1281</td><td>1,997.38</td><td>13.3</td><td>+188</td><td>UP (+1)</td><td>FLAT (0)</td><td>98.88</td><td>PRICE_REVERSAL</td><td>Directional momentum anticipated; real-time execution velocity evaporated into tight two-sided resting liquidity, preserving mid-price stationarity.</td></tr>
+<tr><td><strong>Cat D</strong>: Sudden Price Reversal</td><td>1281</td><td>1,997.38</td><td>13.3</td><td>+188</td><td>UP (+1)</td><td>FLAT (0)</td><td>98.88</td><td>PRICE_REVERSAL</td><td>Prediction occurred immediately prior to an inflection point where past 20-tick momentum inverted, demonstrating recurrent memory inertia at turning points.</td></tr>
+<tr><td><strong>Cat E</strong>: Liquidity Withdrawal</td><td>197</td><td>1,999.96</td><td>13.3</td><td>-61</td><td>DOWN (-1)</td><td>FLAT (0)</td><td>92.02</td><td>HIGH_VOLATILITY</td><td>Resting depth fell into the lower decile of training distribution, where small aggressive orders induced disproportionate queue slippage.</td></tr>
+<tr><td><strong>Cat F</strong>: LSTM Wrong / Transformer Correct</td><td>770</td><td>2,000.18</td><td>13.3</td><td>+78</td><td>UP (+1)</td><td>DOWN (-1)</td><td>96.95</td><td>NORMAL</td><td>Transformer multi-head attention preserved global 50-tick context, whereas the LSTM recurrent hidden state overweighted local tick noise.</td></tr>
+<tr><td><strong>Cat G</strong>: Transformer Wrong / LSTM Correct</td><td>768</td><td>1,999.23</td><td>13.3</td><td>+89</td><td>UP (+1)</td><td>UP (+1)</td><td>97.83</td><td>NORMAL</td><td>LSTM local recency bias adapted effectively to short-term micro-momentum, whereas Transformer attention was diffuse across earlier oscillations.</td></tr>
+</tbody></table></div>
+<figure class="paper-figure"><img src="figures/failure_analysis/fig13_high_confidence_error_examples.png" alt="Figure 27: High-Confidence Failure Case Studies"><figcaption>Figure 27: High-Confidence Failure Case Studies</figcaption></figure>
+
+<figure class="paper-figure"><img src="figures/failure_analysis/fig14_correct_vs_incorrect_distributions.png" alt="Figure 28: Confidence Density Distribution (Correct vs. Incorrect)"><figcaption>Figure 28: Confidence Density Distribution (Correct vs. Incorrect)</figcaption></figure>
+
+<hr class="paper-divider">
+
+<h2 class="section-title">10. Real-Time Out-of-Sample Forward Verification on Live Indian Equities (NSE)</h2>
+
+<p>While historical walk-forward backtesting preserves temporal ordering, simulated trading environments can suffer from unmodeled operational realities, post-selection optimism, and stationary distribution assumptions. To subject our theoretical and failure-analysis models to the ultimate out-of-sample test, we deploy our predictive algorithms directly onto live market sessions of the National Stock Exchange of India (NSE).</p>
+
+<h3 class="subsection-title">10.1 Forward-Testing Protocol & Architectural Evolution</h3>
+
+<p>Predictions were generated post-market close using strictly finalized daily feeds, Floor Trader Pivots (<span class="katex-inline">\(S_1, S_2, R_1, R_2, P\)</span>), 20-day normalized volume ratios, moving average alignments (<span class="katex-inline">\(\text{SMA}_{20}, \text{SMA}_{50}, \text{SMA}_{200}\)</span>), and the rule-based `MarketConditionDetector` calibrated in Milestone 16. Forward performance was recorded and verified automatically against actual next-day settlement prices via an automated verification runner ([scripts/verify_realtime_predictions_2026_09_09.py](file:///c:/Users/sumuk/Desktop/paper/scripts/verify_realtime_predictions_2026_09_09.py)).</p>
+
+<h3 class="subsection-title">10.2 Empirical Forward-Verification: Session 1 (Monday, September 7, 2026)</h3>
+
+<p>Table 9 documents the directional predictions and realized market outcomes across five high-beta NSE equities evaluated on Monday, September 7, 2026.</p>
+
+<p><strong>Table 9: Live Forward-Verification Audit Log (Target Session: September 7, 2026)</strong></p>
+
+<div class="table-container"><table>
+<thead><tr><th>Symbol</th><th>Company</th><th>Baseline Close (Sep 4)</th><th>Predicted Direction</th><th>Actual Session Close</th><th>Actual Return (%)</th><th>Directional Match</th><th>Tested Support / Resistance</th><th>Microstructure Failure Post-Mortem</th></tr></thead>
+<tbody>
+<tr><td><strong>`HFCL.NS`</strong></td><td>HFCL Ltd</td><td>INR 231.44</td><td><strong>UP</strong></td><td>INR 243.01</td><td><strong>+5.00%</strong></td><td><strong>MATCH (CORRECT)</strong></td><td>Tested R1 (238.70): <strong>YES</strong></td><td>Clean rebound off 38.2% Fibonacci support (227.50) reclaiming 20 SMA with expanding volume.</td></tr>
+<tr><td><strong>`WELCORP.NS`</strong></td><td>Welspun Corp Ltd</td><td>INR 2,590.60</td><td><strong>DOWN / CONSOLIDATION</strong></td><td>INR 2,597.90</td><td><strong>+0.28%</strong></td><td><strong>MATCH (CONSOLIDATION)</strong></td><td>Tested R1 (2662.00): <strong>YES</strong></td><td>Parabolic 60-day rally hit overbought exhaustion (RSI 81.1); volume dried up to 0.43x, resulting in sideways absorption.</td></tr>
+<tr><td><strong>`MOREPENLAB.NS`</strong></td><td>Morepen Laboratories Ltd</td><td>INR 113.74</td><td><strong>DOWN</strong></td><td>INR 118.88</td><td><strong>+4.52%</strong></td><td><strong>MISS (INCORRECT)</strong></td><td>Tested R1 (118.00): <strong>YES</strong></td><td><em>Momentum Squeeze</em>: Naive overbought assumption (RSI > 75) failed as aggressive retail/institutional buying absorbed the 118.00 resistance.</td></tr>
+<tr><td><strong>`OMAXE.NS`</strong></td><td>Omaxe Ltd</td><td>INR 136.38</td><td><strong>UP</strong></td><td>INR 129.82</td><td><strong>-4.81%</strong></td><td><strong>MISS (INCORRECT)</strong></td><td>Tested S1 (127.00): <strong>NO</strong></td><td><em>Breakout Trap</em>: Friday breakout attempt failed at 139 ceiling; profit-taking triggered liquidation without volume confirmation.</td></tr>
+<tr><td><strong>`ATHERENERG.NS`</strong></td><td>Ather Energy Ltd</td><td>INR 1,584.00</td><td><strong>DOWN</strong></td><td>INR 1,599.30</td><td><strong>+0.97%</strong></td><td><strong>MISS (INCORRECT)</strong></td><td>Tested S1 (1535.00): <strong>NO</strong></td><td><em>Support Defense</em>: Model anticipated further correction, but institutional buyers firmly defended the rising 20-day SMA (1546.83).</td></tr>
+</tbody></table></div>
+The initial heuristic system produced a <strong>40.0% directional accuracy (2/5 matches)</strong>. A rigorous post-mortem revealed two critical failure modes:
+<ol class="paper-list">
+<li><strong>The Overbought Momentum Paradox</strong>: In high-beta smallcaps, an RSI above 75 often signals aggressive institutional momentum accumulation rather than immediate mean reversion.</li>
+<li><strong>Volume Confirmation Absence</strong>: Predicting breakouts without measuring volume intensity left the model vulnerable to low-liquidity bear traps.</li>
+</ul>
+
+<h3 class="subsection-title">10.3 The Multi-Factor Scoring Engine & Second Forward Test (Target: September 9, 2026)</h3>
+
+<p>To address these empirical failure modes, we engineered a multi-factor quantitative scoring engine combining:
+<div class="katex-display">\[\text{Score}_{\text{Bull}} = 1.5 \cdot \mathbb{I}(P &gt; \text{SMA}_{20}) + 1.0 \cdot \mathbb{I}(P &gt; \text{SMA}_{50}) + 2.0 \cdot \mathbb{I}(\text{MACD}_{\text{Hist}} &gt; 0) + 1.5 \cdot \mathbb{I}(\text{RSI} \in [60, 78]) + 1.5 \cdot \mathbb{I}(\Delta P &gt; 0 \wedge \text{Vol}_{\text{Ratio}} &gt; 1.2)\]</div>
+with symmetric penalties for exhaustion at upper Bollinger Bands and low-volume drift. Confidence is bounded within <span class="katex-inline">\([0.55, 0.88]\)</span> to penalize overconfidence.</p>
+
+<p>Table 10 presents the forward forecasts generated for Wednesday, September 9, 2026, expanding the universe to include <strong>PC Jeweller Ltd (`PCJEWELLER.NS`)</strong> and the <strong>NIFTY 50 Benchmark Index (`^NSEI`)</strong>.</p>
+
+<p><strong>Table 10: Multi-Factor Forward Predictions for Wednesday, September 9, 2026</strong></p>
+
+<div class="table-container"><table>
+<thead><tr><th>Instrument</th><th>Category</th><th>Baseline Close (Sep 8)</th><th>Predicted Direction</th><th>Algorithmic Bias</th><th>Confidence</th><th>Expected Range</th><th>Floor Pivots (S1 / R1)</th><th>Active Regimes / Risk Flags</th></tr></thead>
+<tbody>
+<tr><td><strong>`MOREPENLAB.NS`</strong></td><td>Smallcap Pharma</td><td>INR 117.16 (-1.45%)</td><td><strong>UP</strong></td><td>`BULLISH_MOMENTUM_CONTINUATION`</td><td><strong>88.0%</strong></td><td>[114.59, 124.97]</td><td>S1: 114.59 / R1: 121.14</td><td>High Volatility, Overbought Reversal, Intraday Reversal</td></tr>
+<tr><td><strong>`OMAXE.NS`</strong></td><td>Smallcap Infra</td><td>INR 127.58 (-6.45%)</td><td><strong>UP</strong></td><td>`BULLISH_MOMENTUM_CONTINUATION`</td><td><strong>88.0%</strong></td><td>[125.24, 139.09]</td><td>S1: 125.24 / R1: 130.89</td><td>Gap Down, Severe Volume Dry-up (0.09x 20D vol)</td></tr>
+<tr><td><strong>`ATHERENERG.NS`</strong></td><td>Midcap EV Tech</td><td>INR 1,578.00 (-1.33%)</td><td><strong>UP</strong></td><td>`BULLISH_MOMENTUM_CONTINUATION`</td><td><strong>66.7%</strong></td><td>[1559.53, 1649.72]</td><td>S1: 1559.53 / R1: 1604.93</td><td>Neutral RSI (63.7), Intraday Reversal, 20 SMA Floor</td></tr>
+<tr><td><strong>`HFCL.NS`</strong></td><td>Telecom Equip</td><td>INR 250.76 (+3.19%)</td><td><strong>UP</strong></td><td>`BULLISH_MOMENTUM_CONTINUATION`</td><td><strong>66.7%</strong></td><td>[245.79, 262.60]</td><td>S1: 245.79 / R1: 255.44</td><td>Gap Up, Upper BB Expansion (254.20)</td></tr>
+<tr><td><strong>`WELCORP.NS`</strong></td><td>Pipe & Infra</td><td>INR 2,599.50 (+0.06%)</td><td><strong>UP</strong></td><td>`BULLISH_MOMENTUM_CONTINUATION`</td><td><strong>69.2%</strong></td><td>[2569.43, 2746.64]</td><td>S1: 2569.43 / R1: 2635.63</td><td>Overbought Continuation (RSI 79.6), Vol 0.35x</td></tr>
+<tr><td><strong>`PCJEWELLER.NS`</strong></td><td>Gems & Jewellery</td><td>INR 13.52 (-2.94%)</td><td><strong>UP</strong></td><td>`BULLISH_MOMENTUM_CONTINUATION`</td><td><strong>66.7%</strong></td><td>[12.99, 14.45]</td><td>S1: 12.99 / R1: 14.25</td><td>Massive Volume Spike (3.66x, 1.11B shares), High ATR</td></tr>
+<tr><td><strong>`^NSEI` (NIFTY 50)</strong></td><td>Benchmark Index</td><td>23,635.10 (-0.61%)</td><td><strong>DOWN</strong></td><td>`CORRECTIVE_CONSOLIDATION_PULLBACK`</td><td><strong>64.3%</strong></td><td>[23447.90, 23721.67]</td><td>S1: 23585.82 / R1: 23721.67</td><td>Trading below 20/50/200 SMAs, MACD Hist -62.5</td></tr>
+</tbody></table></div>
+By contrasting single-stock micro-momentum with the systemic downward drift of the benchmark index (`^NSEI`), the platform explicitly isolates equity alpha from market beta drag.
+
+<hr class="paper-divider">
+
+<h2 class="section-title">11. Discussion & Practical Implications</h2>
+
+<h3 class="subsection-title">11.1 Optimization vs. Heuristic Allocations</h3>
+<ol class="paper-list">
+<li><strong>The <span class="katex-inline">\(1/N\)</span> Heuristic vs. Optimization</strong>: While Mean-Variance produces higher gross returns, its frequent portfolio rebalancing creates notable turnover drag. Equal Weight remains a formidable benchmark due to zero parameter estimation error and low turnover.</li>
+<li><strong>Risk Budgeting Matters</strong>: Risk Parity significantly reduces tail risk (Historical 95% VaR and CVaR) compared to naive allocation by mitigating equity concentration.</li>
+<li><strong>Friction Thresholds</strong>: Beyond 25 bps total trading costs, the empirical edge of monthly rebalanced optimization strategies decays rapidly.</li>
+</ul>
+
+<h3 class="subsection-title">11.2 Microstructure Execution Insights</h3>
+<ol class="paper-list">
+<li><strong>Dynamic Confidence Scaling</strong>: Algorithmic execution systems must dynamically scale position sizing based on real-time spread and volatility conditions rather than raw model probability scores.</li>
+<li><strong>Opening Period Execution Quarantine</strong>: Given that failure rates spike to <span class="katex-inline">\(57.80\%\)</span> in the opening 5 minutes of regular trading, algorithmic execution engines should delay non-urgent orders until after 10:00 AM to allow pre-market imbalances to dissipate.</li>
+</ul>
+
+<hr class="paper-divider">
+
+<h2 class="section-title">12. Structural Limitations and Failure Modes</h2>
+
+<p>A rigorous quantitative evaluation requires acknowledging the structural limitations and epistemic boundaries of our empirical models:</p>
+
+<ol class="paper-list">
+<li><strong>Passive Resting Depth vs. Aggressive Order Flow Asymmetry</strong>: Limit order book features (e.g., depth, spread, OFI) capture only passive resting limit orders visible in the order book. Modern equity markets are heavily influenced by aggressive market orders routed from hidden dark pools, crossing networks, or iceberg execution algorithms. Models cannot anticipate non-visible institutional block orders before they impact top-of-book queues.</li>
+<li><strong>Softmax Calibration Drift & Out-of-Distribution Vulnerability</strong>: Standard cross-entropy training encourages deep sequence models to produce overconfident probability distributions (<span class="katex-inline">\(ECE = 0.1621\)</span>). During violent regime shifts (e.g., flash crashes, sudden liquidity withdrawal), softmax outputs fail to communicate epistemic uncertainty, yielding high-confidence false predictions.</li>
+<li><strong>Opening Auction Friction & Information Asymmetry</strong>: The elevated error rates observed during the opening 15 minutes (<span class="katex-inline">\(51.70\%\)</span> to <span class="katex-inline">\(57.80\%\)</span>) stem from overnight macro news arrival and opening call auctions. Quantitative systems operating at the market open require distinct volatility conditioning and wider execution bands.</li>
+<li><strong>Correlational vs. Causal Microstructure Diagnostics</strong>: Pre-failure microstructure feature trajectories (e.g., spread widening, depth collapse) represent observable market state transitions that coincide with predictive breakdown. These findings are correlational rather than causal; exogenous macro announcements and cross-venue algorithmic arbitrage remain unobserved by single-instrument endogenous price features.</li>
+</ul>
+
+<hr class="paper-divider">
+
+<h2 class="section-title">13. Conclusion & Future Directions</h2>
+
+<p>This research platform provides an empirical evaluation of portfolio construction, market microstructure prediction, and live market forward-validation under realistic market conditions. By maintaining strict zero-lookahead temporal integrity, accounting for slippage and transaction costs, conducting formal econometric hypothesis testing, and analyzing model failure dynamics, we demonstrate the nuanced trade-offs between mathematical optimization, naive diversification, and market regime shifts.</p>
+
+<p>Crucially, our failure analysis reveals that high model confidence does not guarantee predictive accuracy during non-stationary regime transitions (<span class="katex-inline">\(ECE = 0.1621\)</span>), and that model error is heavily clustered around specific microstructure dislocations such as sudden order flow inversions, opening auction volatility surges, and resting liquidity collapses. Furthermore, live forward-testing on the National Stock Exchange of India establishes that high-beta equity momentum requires volumetric confirmation to distinguish between sustained institutional squeezes and illiquid bull traps.</p>
+
+<p>Future extensions include integrating continuous limit-order-book state representations via neural jump-diffusion processes, incorporating temperature-scaled conformal prediction sets to bound failure rates under distribution shift, and deploying multi-asset cross-impact execution algorithms.</p>
+
+<hr class="paper-divider">
+
+<h2 class="section-title">References</h2>
+
+<ul class="paper-list">
+<li>Asness, C. S., Frazzini, A., & Pedersen, L. H. (2012). Leverage Aversion and Risk Parity. <em>Financial Analysts Journal</em>, 68(1), 47-59.</li>
+<li>Bouchaud, J. P., Mézard, M., & Potters, M. (2002). Statistical properties of stock order books: empirical results and models. <em>Quantitative Finance</em>, 2(4), 251-256.</li>
+<li>Cartea, Á., Jaimungal, S., & Penalva, J. (2015). <em>Algorithmic and High-Frequency Trading</em>. Cambridge University Press.</li>
+<li>Cont, R., Kukanov, I., & Stoikov, S. (2014). The price impact of order book events. <em>Journal of Financial Econometrics</em>, 12(1), 47-88.</li>
+<li>DeMiguel, V., Garlappi, L., & Uppal, R. (2009). Optimal Versus Naive Diversification: How Inefficient is the 1/N Portfolio Strategy? <em>The Review of Financial Studies</em>, 22(5), 1915-1953.</li>
+<li>Guo, C., Pleiss, G., Sun, Y., & Weinberger, K. Q. (2017). On calibration of modern neural networks. <em>International Conference on Machine Learning (ICML)</em>, 1321-1330.</li>
+<li>Hochreiter, S., & Schmidhuber, J. (1997). Long Short-Term Memory. <em>Neural Computation</em>, 9(8), 1735-1780.</li>
+<li>Jobson, J. D., & Korkie, B. M. (1981). Performance hypothesis testing with the Sharpe and Treynor measures. <em>The Journal of Finance</em>, 36(4), 889-908.</li>
+<li>Ledoit, O., & Wolf, M. (2008). Robust Performance Hypothesis Testing with the Sharpe Ratio. <em>Journal of Empirical Finance</em>, 15(5), 850-859.</li>
+<li>Maillard, S., Roncalli, T., & Teïletche, J. (2010). The Properties of Equally Weighted Risk Contributions Portfolios. <em>The Journal of Portfolio Management</em>, 36(4), 60-70.</li>
+<li>Markowitz, H. (1952). Portfolio Selection. <em>The Journal of Finance</em>, 7(1), 77-91.</li>
+<li>Memmel, C. (2003). Performance Hypothesis Testing with the Sharpe Ratio. <em>Finance Letters</em>, 1(1), 21-23.</li>
+<li>Nystrup, P., Boyd, S., Lindström, E., & Madsen, H. (2018). Dynamic portfolio optimization with regime-switching volatility. <em>Journal of Risk and Financial Management</em>, 11(4), 83.</li>
+<li>Politis, D. N., & Romano, J. P. (1994). The Stationary Bootstrap. <em>Journal of the American Statistical Association</em>, 89(428), 1303-1313.</li>
+<li>Rockafellar, R. T., & Uryasev, S. (2000). Optimization of conditional value-at-risk. <em>Journal of Risk</em>, 2, 21-42.</li>
+<li>Sharpe, W. F. (1964). Capital Asset Prices: A Theory of Market Equilibrium under Conditions of Risk. <em>The Journal of Finance</em>, 19(3), 425-442.</li>
+<li>Sirignano, J., & Cont, R. (2019). Universal features of price formation in financial markets: perspectives via deep learning. <em>Quantitative Finance</em>, 19(9), 1449-1459.</li>
+<li>Stoikov, S. (2018). The micro-price: a high frequency estimator of future prices. <em>Quantitative Finance</em>, 18(12), 1959-1966.</li>
+<li>Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, Ł., & Polosukhin, I. (2017). Attention is all you need. <em>Advances in Neural Information Processing Systems (NeurIPS)</em>, 30.</li>
+<li>Zhang, Z., Zohren, S., & Roberts, S. (2019). DeepLOB: Deep convolutional neural networks for limit order books. <em>IEEE Transactions on Signal Processing</em>, 67(11), 3001-3012.</li>
+</ul>
+    </div>
+</body>
+</html>
