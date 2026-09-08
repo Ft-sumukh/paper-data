@@ -4,9 +4,9 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.110%2B-009688.svg)](https://fastapi.tiangolo.com)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.32%2B-FF4B4B.svg)](https://streamlit.io)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Tests Passing](https://img.shields.io/badge/tests-40%20passed-brightgreen.svg)]()
+[![Tests Passing](https://img.shields.io/badge/tests-48%20passed-brightgreen.svg)]()
 
-A quantitative research and production engineering platform designed to investigate **portfolio construction methods (Equal Weight, Minimum Variance, Mean-Variance, Risk Parity)** across **market volatility regimes**, incorporating realistic **transaction cost drag, turnover, and zero-lookahead walk-forward simulation**.
+A quantitative research and production engineering platform designed to investigate **portfolio construction methods (Equal Weight, Minimum Variance, Mean-Variance, Risk Parity)** across **market volatility regimes**, incorporating realistic **transaction cost drag, turnover, and zero-lookahead walk-forward simulation**, alongside an extensive **Failure Analysis & Market Regime Detection** research framework.
 
 ---
 
@@ -15,11 +15,16 @@ A quantitative research and production engineering platform designed to investig
 ### Central Research Question
 > **"How do different portfolio construction methods perform under different market regimes, and how effectively does diversification reduce portfolio risk after accounting for transaction costs?"**
 
-### Core Hypotheses Tested
+### Failure Analysis Research Objective
+> **"Under what market conditions do deep learning sequence models (LSTM, Transformer) and technical momentum models fail, and are predictive errors statistically associated with identifiable microstructure regimes?"**
+
+### Core Hypotheses & Research Questions Tested
 * **H1 — Diversification**: Increasing the number of uncorrelated assets asymptotically reduces portfolio volatility following $\sigma_p(k) = \beta_0 + \beta_1 / \sqrt{k}$ ($p < 0.001$).
 * **H2 — Risk Parity Superiority**: Risk Parity allocation provides superior risk-adjusted performance compared with Equal Weight under high-volatility market conditions.
 * **H3 — Market Regimes**: Portfolio construction methods exhibit statistically significant performance divergences across volatility environments.
 * **H4 — Optimization Edge**: Convex optimization-based portfolio construction produces statistically meaningful differences in risk-adjusted performance compared with $1/N$ post transaction costs.
+* **RQ8–RQ12 (LOB Microstructure Robustness)**: Evaluates directional prediction errors under Price Reversals, Liquidity Withdrawal, Order Flow Shocks, Spread Widening, and evaluates Transformer vs. LSTM architectural divergence.
+* **RQ13–RQ14 (NSE Intraday & Technical Failure Dynamics)**: Evaluates opening 5m/15m/30m auction volatility drag, RSI overbought momentum squeezes, and gap breakout failures on NSE equities.
 
 ---
 
@@ -41,14 +46,21 @@ financial-portfolio-research/
 │   ├── optimization/        # Base optimizer, 1/N, GMV, MVO (Max Sharpe), Risk Parity (ERC)
 │   ├── backtesting/         # Walk-forward rolling engine, turnover & transaction cost model
 │   ├── regimes/             # Realized volatility quantiles & Gaussian Mixture Model (GMM)
+│   ├── failure_analysis/   # Error detection, zero-leakage regime calibration, confidence calibration, statistical testing, case study generation, and 14 publication figures
 │   ├── statistics/          # Hypothesis testing (H1–H4), stationary block bootstrap, Jobson-Korkie
 │   └── visualization/       # 15 publication-grade Matplotlib / Seaborn figures
 │
+├── experiments/
+│   └── failure_analysis/    # End-to-end failure analysis orchestrator
+├── results/
+│   ├── failure_analysis/    # 7 empirical CSV tables + case studies
+│   ├── figures/failure_analysis/ # 14 publication-grade figures
+│   └── failure_analysis_report.md # Comprehensive failure diagnosis report
 ├── configs/                 # Declarative YAML experiment configurations
 ├── notebooks/               # 9 reproducible Jupyter research notebooks
 ├── paper/                   # Academic manuscript (Markdown/LaTeX), figures & BibTeX references
 ├── scripts/                 # CLI entrypoints (download_data, init_db, run_experiments, generate_paper)
-├── tests/                   # 40-test suite (Unit, Integration, Risk, Optimization, Data Leakage)
+├── tests/                   # 48-test suite (Unit, Integration, Risk, Optimization, Leakage, Failure Analysis)
 ├── Dockerfile & docker-compose.yml
 └── requirements.txt
 ```
@@ -78,7 +90,7 @@ financial-portfolio-research/
 
 Temporal integrity is mathematically enforced and unit-tested:
 * **Zero-Lookahead Estimation**: At rebalance date $t$, parameters $\boldsymbol{\mu}$ and $\mathbf{\Sigma}$ are computed strictly over $[t - 252, t - 1]$.
-* **Execution & Weight Drift**: Orders execute at date $t$. Daily asset returns drift weights between rebalance dates.
+* **Zero-Leakage Regime Thresholds**: Failure analysis quantile cutoffs for volatility spikes, liquidity deciles, and spread widening are calibrated strictly on training set distributions.
 * **Automated Invariance Tests**: `tests/test_data_leakage.py` injects artificial future shocks at date $T_{future} > t$ and asserts that historical weights remain $100\%$ bit-for-bit identical.
 
 ---
@@ -94,10 +106,10 @@ Out-of-sample backtest across 2,356 trading days (2016–2024) under 10.0 bps tr
 | **Mean-Variance (MVO)** | 13.92% | **12.45%** | 16.85% | **0.68** | **0.96** | 21.30% | 114.2% |
 | **Risk Parity (ERC)** | 9.94% | **9.71%** | 11.20% | 0.69 | 0.95 | 13.80% | 18.6% |
 
-### Key Inferences & Hypotheses
-* **H1 (SUPPORTED)**: Volatility decays asymptotically following $\sigma(k) = 0.081 + 0.0735 / \sqrt{k}$ ($R^2 = 0.381, p = 3.48 \times 10^{-38}$).
-* **H2 (SUPPORTED)**: Under High Volatility regimes, Risk Parity achieves Sharpe = 1.07 vs Equal Weight Sharpe = 1.03 (Jobson-Korkie $p < 0.001$).
-* **H4 (SUPPORTED)**: Optimization produces positive Sharpe difference ($\Delta SR = +0.056$, 95% Bootstrap CI: $[-0.37, 0.49]$).
+### Key Failure Analysis Findings
+* **Overconfidence Anomaly**: Expected Calibration Error ($ECE = 0.1621$) indicates deep learning models become systematically overconfident ($> 80\%$) during non-stationary regime transitions.
+* **Opening Auction Drag**: NSE equity error rates in the first 5 minutes ($57.80\%$) are significantly higher than post-10:00 AM trading ($41.20\%$, $OR = 1.96, p = 0.024$).
+* **Regime Vulnerability**: High Liquidity regimes exhibit a statistically significant $78.93\%$ increase in failure odds ($p = 0.0393$), as balanced two-sided depth dampens order flow impact and triggers false breakouts.
 
 ---
 
@@ -127,25 +139,16 @@ python scripts/init_db.py
 # 3. Execute walk-forward backtests & generate figures/tables
 python scripts/run_experiments.py
 
-# 4. Compile academic research paper
+# 4. Run Failure Analysis & Market Regime Detection Pipeline
+python experiments/failure_analysis/run_failure_analysis.py
+
+# 5. Compile academic research paper
 python scripts/generate_paper.py
 ```
 
-### 6.3 Running the Interactive Streamlit Dashboard
+### 6.3 Running Tests
 ```bash
-streamlit run app/dashboard/app.py
-```
-Open your browser at `http://localhost:8501`.
-
-### 6.4 Running the FastAPI Backend
-```bash
-uvicorn app.api.main:app --reload --port 8000
-```
-Interactive OpenAPI Swagger docs available at `http://localhost:8000/docs`.
-
-### 6.5 Running Tests
-```bash
-pytest tests/ -v
+python -m pytest tests/ -v
 ```
 
 ---

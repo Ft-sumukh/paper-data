@@ -1,0 +1,5 @@
+Time Window,Prediction Count,Error Rate (%),Mean Volatility (ATR %)
+Opening 5 Min,45,57.8,6.8
+Opening 15 Min,120,51.7,5.9
+Opening 30 Min,210,48.1,5.1
+Rest of Session (After 10:00 AM),850,41.2,3.4

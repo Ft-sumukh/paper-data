@@ -1,0 +1,40 @@
+condition,sample_size,lstm_error_rate,transformer_error_rate,error_reduction,superior_model
+High Volatility Lstm,60,0.3667,0.35,0.0167,Transformer
+Low Liquidity Lstm,128,0.2812,0.3281,-0.0469,LSTM
+High Liquidity Lstm,114,0.4123,0.3772,0.0351,Transformer
+Spread Expansion Lstm,68,0.0,0.0,0.0,Tie
+Ofi Shock Lstm,57,0.3684,0.3684,0.0,Tie
+Strong Uptrend Lstm,78,0.3718,0.4231,-0.0513,LSTM
+Strong Downtrend Lstm,93,0.1828,0.2151,-0.0323,LSTM
+Price Reversal Lstm,193,0.1347,0.1658,-0.0311,LSTM
+Momentum Reversal Lstm,10,0.3,0.4,-0.1,LSTM
+Is Correct Lstm,932,0.0,0.1663,-0.1663,LSTM
+Is Error Lstm,511,1.0,0.7515,0.2485,Transformer
+Is High Conf Error Lstm,202,1.0,0.901,0.099,Transformer
+Is Low Conf Error Lstm,35,1.0,0.4286,0.5714,Transformer
+Is High Conf Correct Lstm,639,0.0,0.1127,-0.1127,LSTM
+High Volatility Trans,60,0.3667,0.35,0.0167,Transformer
+Low Liquidity Trans,128,0.2812,0.3281,-0.0469,LSTM
+High Liquidity Trans,114,0.4123,0.3772,0.0351,Transformer
+Spread Expansion Trans,68,0.0,0.0,0.0,Tie
+Ofi Shock Trans,57,0.3684,0.3684,0.0,Tie
+Strong Uptrend Trans,78,0.3718,0.4231,-0.0513,LSTM
+Strong Downtrend Trans,93,0.1828,0.2151,-0.0323,LSTM
+Price Reversal Trans,193,0.1347,0.1658,-0.0311,LSTM
+Momentum Reversal Trans,10,0.3,0.4,-0.1,LSTM
+Is Correct Trans,904,0.1405,0.0,0.1405,Transformer
+Is Error Trans,539,0.7124,1.0,-0.2876,LSTM
+Is High Conf Error Trans,256,0.8242,1.0,-0.1758,LSTM
+Is Low Conf Error Trans,59,0.5932,1.0,-0.4068,LSTM
+Is High Conf Correct Trans,607,0.061,0.0,0.061,Transformer
+Is Error,511,1.0,0.7515,0.2485,Transformer
+Is Correct,932,0.0,0.1663,-0.1663,LSTM
+High Volatility,60,0.3667,0.35,0.0167,Transformer
+Low Liquidity,128,0.2812,0.3281,-0.0469,LSTM
+High Liquidity,114,0.4123,0.3772,0.0351,Transformer
+Spread Expansion,68,0.0,0.0,0.0,Tie
+Ofi Shock,57,0.3684,0.3684,0.0,Tie
+Strong Uptrend,78,0.3718,0.4231,-0.0513,LSTM
+Strong Downtrend,93,0.1828,0.2151,-0.0323,LSTM
+Price Reversal,193,0.1347,0.1658,-0.0311,LSTM
+Momentum Reversal,10,0.3,0.4,-0.1,LSTM
