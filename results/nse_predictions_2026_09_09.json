@@ -1,0 +1,296 @@
+{
+  "generated_at": "2026-09-08",
+  "target_date": "2026-09-09",
+  "exchange": "NSE",
+  "instrument_count": 6,
+  "predictions": {
+    "MOREPENLAB": {
+      "symbol": "MOREPENLAB.NS",
+      "company": "Morepen Laboratories Ltd",
+      "category": "Smallcap Pharma / API",
+      "last_session_date": "2026-09-08",
+      "last_close": 117.16,
+      "last_change_pct": -1.45,
+      "session_range": [
+        116.0,
+        122.55
+      ],
+      "indicators": {
+        "sma20": 98.84,
+        "sma50": 76.89,
+        "sma200": 56.44,
+        "rsi_14": 77.47,
+        "macd": 12.03,
+        "macd_signal": 10.94,
+        "macd_histogram": 1.09,
+        "atr_14": 7.1,
+        "atr_pct": 6.06,
+        "volume_ratio_20d": 0.67,
+        "bb_upper": 124.64,
+        "bb_lower": 73.03
+      },
+      "pivots": {
+        "pivot": 118.57,
+        "support_s1": 114.59,
+        "support_s2": 112.02,
+        "resistance_r1": 121.14,
+        "resistance_r2": 125.12
+      },
+      "prediction": {
+        "target_date": "2026-09-09",
+        "predicted_direction": "UP",
+        "predicted_bias": "BULLISH_MOMENTUM_CONTINUATION",
+        "confidence_score": 0.88,
+        "expected_trading_range": [
+          114.59,
+          124.97
+        ],
+        "active_regimes": [
+          "HIGH_VOLATILITY_EXPANSION",
+          "OVERBOUGHT_REVERSAL",
+          "INTRADAY_REVERSAL"
+        ],
+        "opening_volatility_risk": "HIGH"
+      }
+    },
+    "OMAXE": {
+      "symbol": "OMAXE.NS",
+      "company": "Omaxe Ltd",
+      "category": "Smallcap Real Estate & Infra",
+      "last_session_date": "2026-09-08",
+      "last_close": 127.58,
+      "last_change_pct": -6.45,
+      "session_range": [
+        126.2,
+        131.85
+      ],
+      "indicators": {
+        "sma20": 110.13,
+        "sma50": 96.73,
+        "sma200": 84.84,
+        "rsi_14": 66.33,
+        "macd": 11.01,
+        "macd_signal": 8.91,
+        "macd_histogram": 2.1,
+        "atr_14": 10.46,
+        "atr_pct": 8.2,
+        "volume_ratio_20d": 0.09,
+        "bb_upper": 142.98,
+        "bb_lower": 77.27
+      },
+      "pivots": {
+        "pivot": 128.54,
+        "support_s1": 125.24,
+        "support_s2": 122.89,
+        "resistance_r1": 130.89,
+        "resistance_r2": 134.19
+      },
+      "prediction": {
+        "target_date": "2026-09-09",
+        "predicted_direction": "UP",
+        "predicted_bias": "BULLISH_MOMENTUM_CONTINUATION",
+        "confidence_score": 0.88,
+        "expected_trading_range": [
+          125.24,
+          139.09
+        ],
+        "active_regimes": [
+          "GAP_DOWN",
+          "NEUTRAL_RSI"
+        ],
+        "opening_volatility_risk": "HIGH"
+      }
+    },
+    "ATHERENERG": {
+      "symbol": "ATHERENERG.NS",
+      "company": "Ather Energy Ltd",
+      "category": "Midcap EV Technology",
+      "last_session_date": "2026-09-08",
+      "last_close": 1578.0,
+      "last_change_pct": -1.33,
+      "session_range": [
+        1568.0,
+        1613.4
+      ],
+      "indicators": {
+        "sma20": 1546.83,
+        "sma50": 1381.24,
+        "sma200": 1086.48,
+        "rsi_14": 63.68,
+        "macd": 72.25,
+        "macd_signal": 78.42,
+        "macd_histogram": -6.17,
+        "atr_14": 65.2,
+        "atr_pct": 4.13,
+        "volume_ratio_20d": 0.5,
+        "bb_upper": 1733.57,
+        "bb_lower": 1360.08
+      },
+      "pivots": {
+        "pivot": 1586.47,
+        "support_s1": 1559.53,
+        "support_s2": 1541.07,
+        "resistance_r1": 1604.93,
+        "resistance_r2": 1631.87
+      },
+      "prediction": {
+        "target_date": "2026-09-09",
+        "predicted_direction": "UP",
+        "predicted_bias": "BULLISH_MOMENTUM_CONTINUATION",
+        "confidence_score": 0.6667,
+        "expected_trading_range": [
+          1559.53,
+          1649.72
+        ],
+        "active_regimes": [
+          "NEUTRAL_RSI",
+          "INTRADAY_REVERSAL"
+        ],
+        "opening_volatility_risk": "HIGH"
+      }
+    },
+    "HFCL": {
+      "symbol": "HFCL.NS",
+      "company": "HFCL Ltd",
+      "category": "Telecom Equipment & Optical Fiber",
+      "last_session_date": "2026-09-08",
+      "last_close": 250.76,
+      "last_change_pct": 3.19,
+      "session_range": [
+        245.51,
+        255.16
+      ],
+      "indicators": {
+        "sma20": 233.36,
+        "sma50": 218.83,
+        "sma200": 165.48,
+        "rsi_14": 62.53,
+        "macd": 7.39,
+        "macd_signal": 7.43,
+        "macd_histogram": -0.05,
+        "atr_14": 10.76,
+        "atr_pct": 4.29,
+        "volume_ratio_20d": 0.99,
+        "bb_upper": 254.2,
+        "bb_lower": 212.53
+      },
+      "pivots": {
+        "pivot": 250.48,
+        "support_s1": 245.79,
+        "support_s2": 240.83,
+        "resistance_r1": 255.44,
+        "resistance_r2": 260.13
+      },
+      "prediction": {
+        "target_date": "2026-09-09",
+        "predicted_direction": "UP",
+        "predicted_bias": "BULLISH_MOMENTUM_CONTINUATION",
+        "confidence_score": 0.6667,
+        "expected_trading_range": [
+          245.79,
+          262.6
+        ],
+        "active_regimes": [
+          "GAP_UP",
+          "NEUTRAL_RSI",
+          "INTRADAY_REVERSAL"
+        ],
+        "opening_volatility_risk": "HIGH"
+      }
+    },
+    "WELCORP": {
+      "symbol": "WELCORP.NS",
+      "company": "Welspun Corp Ltd",
+      "category": "Large-Midcap Pipe & Infrastructure",
+      "last_session_date": "2026-09-08",
+      "last_close": 2599.5,
+      "last_change_pct": 0.06,
+      "session_range": [
+        2575.5,
+        2641.7
+      ],
+      "indicators": {
+        "sma20": 2272.68,
+        "sma50": 1896.86,
+        "sma200": 1456.59,
+        "rsi_14": 79.6,
+        "macd": 221.0,
+        "macd_signal": 204.01,
+        "macd_histogram": 16.99,
+        "atr_14": 133.76,
+        "atr_pct": 5.15,
+        "volume_ratio_20d": 0.35,
+        "bb_upper": 2848.47,
+        "bb_lower": 1696.89
+      },
+      "pivots": {
+        "pivot": 2605.57,
+        "support_s1": 2569.43,
+        "support_s2": 2539.37,
+        "resistance_r1": 2635.63,
+        "resistance_r2": 2671.77
+      },
+      "prediction": {
+        "target_date": "2026-09-09",
+        "predicted_direction": "UP",
+        "predicted_bias": "BULLISH_MOMENTUM_CONTINUATION",
+        "confidence_score": 0.6923,
+        "expected_trading_range": [
+          2569.43,
+          2746.64
+        ],
+        "active_regimes": [
+          "OVERBOUGHT_CONTINUATION"
+        ],
+        "opening_volatility_risk": "HIGH"
+      }
+    },
+    "NIFTY50": {
+      "symbol": "^NSEI",
+      "company": "NIFTY 50 Benchmark Index",
+      "category": "Broad Market Benchmark",
+      "last_session_date": "2026-09-08",
+      "last_close": 23635.1,
+      "last_change_pct": -0.61,
+      "session_range": [
+        23623.1,
+        23758.95
+      ],
+      "indicators": {
+        "sma20": 24123.32,
+        "sma50": 24196.32,
+        "sma200": 23896.72,
+        "rsi_14": 32.12,
+        "macd": -125.69,
+        "macd_signal": -63.2,
+        "macd_histogram": -62.49,
+        "atr_14": 170.18,
+        "atr_pct": 0.72,
+        "volume_ratio_20d": 0.0,
+        "bb_upper": 24552.31,
+        "bb_lower": 23694.33
+      },
+      "pivots": {
+        "pivot": 23672.38,
+        "support_s1": 23585.82,
+        "support_s2": 23536.53,
+        "resistance_r1": 23721.67,
+        "resistance_r2": 23808.23
+      },
+      "prediction": {
+        "target_date": "2026-09-09",
+        "predicted_direction": "DOWN",
+        "predicted_bias": "CORRECTIVE_CONSOLIDATION_PULLBACK",
+        "confidence_score": 0.6429,
+        "expected_trading_range": [
+          23447.9,
+          23721.67
+        ],
+        "active_regimes": [
+          "NEUTRAL_RSI"
+        ],
+        "opening_volatility_risk": "MODERATE"
+      }
+    }
+  }
+}
