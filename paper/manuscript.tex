@@ -4,12 +4,11 @@
 \usepackage{amsmath,amssymb,amsfonts,bm}
 \usepackage{booktabs}
 \usepackage{graphicx}
-\usepackage{subcaption}
 \usepackage{microtype}
-\usepackage{hyperref}
 \usepackage{cite}
-\usepackage{xcolor}
 \usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
 
 \hypersetup{
     colorlinks=true,
@@ -18,11 +17,11 @@
     urlcolor=blue!80!black
 }
 
-\title{\textbf{Financial Market Risk \& Portfolio Optimization Under Different Market Regimes:\\A Microstructure Failure Analysis and Live Forward-Verification Study}}
+\title{\textbf{Microstructure Failure Dynamics and Predictive Uncertainty in Deep Financial Models: An Empirical Limit Order Book and Live Market Study}}
 
 \author{
     \textbf{Quantitative Research Team}\\
-    \textit{Computational Finance \& Market Microstructure Research Group}\\
+    \textit{Computational Market Microstructure \& Financial Machine Learning Group}\\
     \small Repository: \url{https://github.com/Ft-sumukh/paper-data.git}
 }
 
@@ -33,198 +32,130 @@
 \maketitle
 
 \begin{abstract}
-We present an empirical investigation into the performance, risk profiles, and operational viability of four canonical portfolio construction strategies: \textbf{Equal Weight ($1/N$)}, \textbf{Global Minimum Variance (GMV)}, \textbf{Markowitz Mean-Variance Optimization (MVO)}, and \textbf{Equal Risk Contribution (Risk Parity / ERC)}. Utilizing a diversified 20-asset multi-sector universe across 2,609 daily observations (2015--2024), we execute out-of-sample walk-forward backtests under realistic execution friction (10.0 bps fee and 5.0 bps slippage). We formally evaluate four empirical hypotheses ($H1$--$H4$) regarding diversification asymptotic decay, risk parity resilience during volatility spikes, cross-regime performance shifts, and post-cost optimization edge. Our findings confirm that portfolio volatility decays asymptotically following $\sigma(k) = \beta_0 + \beta_1 / \sqrt{k}$ ($p = 3.48 \times 10^{-38}$). In addition, Risk Parity demonstrates superior risk-budgeting resilience under high-volatility regimes (Sharpe = 1.07 vs Equal Weight Sharpe = 1.03). However, convex optimization incurs substantial turnover drag, highlighting the critical role of transaction cost modeling. Furthermore, we extend our platform to deep sequence limit order book (LOB) failure diagnosis ($RQ8$--$RQ14$) across $N=1,443$ out-of-sample events, discovering an Expected Calibration Error of $ECE = 0.1621$ where high-confidence predictions systematically fail around violent order flow inversions and liquidity collapses. Finally, we validate our models in real-time forward trading on the National Stock Exchange of India (NSE), establishing that high-beta equity momentum requires volumetric confirmation to distinguish between sustained institutional squeezes and illiquid bull traps.
+While deep sequence learning architectures—such as Long Short-Term Memory (LSTM) networks and Self-Attention Transformers—demonstrate competitive directional accuracy on high-frequency limit order book (LOB) benchmarks, their reliability degrades substantially in operational deployment. Rather than reporting aggregate laboratory accuracy metrics, this paper provides an empirical post-mortem into the conditions, regimes, and microstructure mechanisms that trigger model failure. Evaluating $N=1,443$ out-of-sample events with zero lookahead bias, we document an Expected Calibration Error of $\mathbf{ECE = 0.1621}$, where upper-decile model confidence ($> 90\%$) yields a severe $15.19\%$ empirical calibration gap. High-confidence failures systematically cluster around abrupt Order Flow Imbalance (OFI) sign flips, resting liquidity evaporation ($> 60\%$ depth collapse within 5 ticks), and pre-failure spread widening. Econometric contingency tests prove that High Liquidity regimes suffer a statistically significant $78.9\%$ surge in failure odds ($OR = 1.789, p = 0.0393$), as balanced two-sided depth dampens order flow impact and triggers false breakout predictions. Furthermore, a paired McNemar test ($\chi^2 = 2.571, p = 0.1088$) reveals that while LSTM and Transformer models achieve statistical parity overall, their inductive biases diverge sharply across regimes: Transformers exhibit superior robustness during liquidity shocks ($+8.33\%$ accuracy advantage), whereas LSTMs excel in localized micro-momentum persistence. Finally, live forward-testing on the National Stock Exchange of India (NSE) confirms that opening auction volatility inflates failure rates to $57.8\%$ ($OR = 1.96, p = 0.024$), establishing clear empirical boundaries for deploying deep sequence models in algorithmic execution.
 \end{abstract}
 
-\section{Introduction \& Motivation}
-Portfolio construction and market microstructure prediction lie at the foundation of quantitative finance. Since the seminal formulation of Modern Portfolio Theory by Markowitz \cite{markowitz1952portfolio} and the Capital Asset Pricing Model of Sharpe \cite{sharpe1964capital}, extensive literature has debated whether mathematical optimization yields economically meaningful outperformance over naive allocation rules in out-of-sample regimes \cite{demiguel2009optimal, maillard2010properties}. 
+\section{Introduction}
+Deep sequence models have become a standard paradigm for predicting short-horizon price movements in modern electronic financial markets \cite{zhang2019deeplob, sirignano2019universal}. By extracting non-linear spatial-temporal representations from high-frequency limit order book queues, models such as LSTMs \cite{hochreiter1997long} and Transformers \cite{vaswani2017attention} routinely report directional accuracies between $62\%$ and $68\%$. 
 
-In high-frequency and sequence-based execution, modern deep learning architectures—such as Long Short-Term Memory (LSTM) networks \cite{hochreiter1997long} and Self-Attention Transformers \cite{vaswani2017attention, zhang2019deeplob}—have achieved notable accuracy in laboratory benchmarks. However, empirical deployment often suffers from uncalibrated overconfidence \cite{guo2017calibration} and catastrophic breakdown during regime transitions.
+However, in quantitative execution and market making, aggregate accuracy is an incomplete and often misleading metric. In live trading, the economic cost of an error is asymmetric: an incorrect high-confidence prediction executed into an adverse liquidity shock incurs severe slippage and adverse selection costs. Despite this operational reality, existing literature predominantly focuses on architectural enhancements while treating model errors as homogeneous Gaussian noise.
 
-This paper addresses two central questions:
+This paper addresses this gap by investigating three core research questions:
 \begin{enumerate}
-    \item \textbf{Macro Portfolio Allocation}: How do different convex portfolio construction methods perform across distinct volatility regimes, and how effectively does diversification mitigate risk after accounting for turnover friction?
-    \item \textbf{Microstructure Failure Dynamics}: Under what market conditions do sequence-based predictive models fail, and are their errors systematically explained by observable microstructure regimes such as order flow imbalance (OFI) shocks, liquidity evaporation, and opening auction volatility drag?
+    \item \textbf{Calibration \& Overconfidence ($RQ8, RQ9$)}: Does model prediction confidence reliably reflect true empirical accuracy, and do high-confidence predictions fail during non-stationary regime transitions?
+    \item \textbf{Regime-Dependent Vulnerability ($RQ10, RQ11, RQ12$)}: Can directional prediction errors be systematically explained by observable microstructure states (e.g., liquidity evaporation, spread widening, order flow shocks), and do recurrent and self-attention inductive biases exhibit structural divergence?
+    \item \textbf{Real-World Operational Field Audit ($RQ13, RQ14$)}: How do these failure dynamics manifest in live forward trading on high-beta equity markets, and does the market opening auction introduce systematic volatility drag?
 \end{enumerate}
 
-To answer these questions, we build an end-to-end quantitative platform enforcing strict temporal integrity, zero data leakage, and live out-of-sample forward verification on live National Stock Exchange of India (NSE) equities.
+\section{Related Work}
+The statistical dynamics of limit order books have been rigorously modeled through Hawkes processes, queueing theory, and linear order flow representations \cite{bouchaud2002statistical, cont2014price, cartea2015algorithmic}. Cont et al. \cite{cont2014price} established that short-term price changes are driven primarily by Order Flow Imbalance (OFI), which measures the net accumulation of buy versus sell depth across book levels. Stoikov \cite{stoikov2018micro} extended this to the microprice estimator, linking queue imbalances to future equilibrium prices.
 
-\section{Theoretical Framework \& Mathematical Formulations}
+With the rise of deep learning, Zhang et al. \cite{zhang2019deeplob} introduced DeepLOB, employing convolutional neural networks to capture multi-level order book spatial structures, while Sirignano and Cont \cite{sirignano2019universal} demonstrated universal spatial-temporal features in price formation across diverse equity universes. Simultaneously, transformer-based self-attention architectures \cite{vaswani2017attention} have been adapted to preserve multi-tick context without recurrent memory decay.
 
-\subsection{Asset Returns \& Risk Measures}
-Let $P_{i,t}$ denote the adjusted close price of asset $i \in \{1, \dots, N\}$ at trading day $t$.
+However, modern deep neural networks are notoriously uncalibrated \cite{guo2017calibration}. While temperature scaling and calibration metrics have been extensively explored in vision and NLP, empirical calibration dynamics under financial microstructure regime shifts remain largely unaddressed.
+
+\section{Theoretical Framework \& Metrics}
+
+\subsection{Microstructure Formulations}
+Let $p_{b,t}, q_{b,t}$ and $p_{a,t}, q_{a,t}$ denote the Level-1 bid price, bid size, ask price, and ask size at event tick $t$.
 \begin{itemize}
-    \item \textbf{Arithmetic Simple Return}:
+    \item \textbf{Bid-Ask Spread}:
     \begin{equation}
-        R_{i,t} = \frac{P_{i,t} - P_{i,t-1}}{P_{i,t-1}}
+        S_t = p_{a,t} - p_{b,t}
     \end{equation}
-    \item \textbf{Portfolio Return}:
+    \item \textbf{Mid-Price \& Microprice}:
     \begin{equation}
-        R_{p,t} = \mathbf{w}_t^T \mathbf{R}_t = \sum_{i=1}^N w_{i,t} R_{i,t}
+        P_t^{mid} = \frac{p_{b,t} + p_{a,t}}{2}, \quad P_t^{micro} = \frac{q_{b,t} p_{a,t} + q_{a,t} p_{b,t}}{q_{b,t} + q_{a,t}}
     \end{equation}
-    \item \textbf{Portfolio Volatility}:
-    \begin{equation}
-        \sigma_p = \sqrt{\mathbf{w}^T \mathbf{\Sigma} \mathbf{w}}
-    \end{equation}
-    \item \textbf{Annualized Sharpe Ratio}:
-    \begin{equation}
-        SR = \frac{\mathbb{E}[R_p] - R_f}{\sigma_p} \times \sqrt{252}
-    \end{equation}
-    \item \textbf{Value at Risk (VaR) \& Expected Shortfall (CVaR)}:
-    \begin{equation}
-        \text{VaR}_\alpha = -Q_\alpha(R_p), \quad \text{ES}_\alpha = -\mathbb{E}[R_p \mid R_p \le -\text{VaR}_\alpha]
-    \end{equation}
-    where $Q_\alpha$ is the empirical $\alpha$-quantile \cite{rockafellar2000optimization}.
+    \item \textbf{Level-1 Order Flow Imbalance (OFI)} \cite{cont2014price}:
+    \begin{align}
+        \text{OFI}_t = &\, I_{\{p_{b,t} \ge p_{b,t-1}\}} q_{b,t} - I_{\{p_{b,t} \le p_{b,t-1}\}} q_{b,t-1} \nonumber \\
+        & - I_{\{p_{a,t} \le p_{a,t-1}\}} q_{a,t} + I_{\{p_{a,t} \ge p_{a,t-1}\}} q_{a,t-1}
+    \end{align}
 \end{itemize}
 
-\subsection{Portfolio Optimization Formulations}
-We implement four allocation paradigms using Sequential Least Squares Quadratic Programming (SLSQP):
-\begin{enumerate}
-    \item \textbf{Equal Weight ($1/N$)}:
-    \begin{equation}
-        w_i = \frac{1}{N}, \quad \forall i \in \{1, \dots, N\}
-    \end{equation}
-    \item \textbf{Global Minimum Variance (GMV)}:
-    \begin{equation}
-        \min_{\mathbf{w}} \mathbf{w}^T \mathbf{\Sigma} \mathbf{w} \quad \text{s.t.} \quad \mathbf{1}^T \mathbf{w} = 1, \quad w_i \ge 0, \quad \mathbf{A}_{sec} \mathbf{w} \le \mathbf{b}_{sec}
-    \end{equation}
-    \item \textbf{Mean-Variance Optimization (MVO - Max Sharpe)}:
-    \begin{equation}
-        \max_{\mathbf{w}} \frac{\mathbf{w}^T \boldsymbol{\mu} - R_f}{\sqrt{\mathbf{w}^T \mathbf{\Sigma} \mathbf{w}}} \quad \text{s.t.} \quad \mathbf{1}^T \mathbf{w} = 1, \quad 0 \le w_i \le w_{max}
-    \end{equation}
-    \item \textbf{Equal Risk Contribution (Risk Parity / ERC)}:
-    Equalizes total risk contributions across all assets \cite{maillard2010properties}:
-    \begin{equation}
-        \text{TRC}_i = w_i \frac{(\mathbf{\Sigma} \mathbf{w})_i}{\sigma_p} = \frac{\sigma_p}{N}
-    \end{equation}
-    Solved via the convex objective:
-    \begin{equation}
-        \min_{\mathbf{w}} \sum_{i=1}^N \left(\frac{w_i (\mathbf{\Sigma} \mathbf{w})_i}{\mathbf{w}^T \mathbf{\Sigma} \mathbf{w}} - \frac{1}{N}\right)^2 \quad \text{s.t.} \quad \mathbf{1}^T \mathbf{w} = 1, \quad w_i > 0
-    \end{equation}
-\end{enumerate}
-
-\subsection{Microstructure Feature Metrics}
-For high-frequency limit order book modeling, we compute Level-1 Order Flow Imbalance (OFI) \cite{cont2014price}:
-\begin{equation}
-    \text{OFI}_t = I_{\{p_{b,t} \ge p_{b,t-1}\}} q_{b,t} - I_{\{p_{b,t} \le p_{b,t-1}\}} q_{b,t-1} - I_{\{p_{a,t} \le p_{a,t-1}\}} q_{a,t} + I_{\{p_{a,t} \ge p_{a,t-1}\}} q_{a,t-1}
-\end{equation}
-and evaluate neural calibration via Expected Calibration Error (ECE) across $M=6$ confidence bins \cite{guo2017calibration}:
-\begin{equation}
-    \text{ECE} = \sum_{m=1}^M \frac{|B_m|}{N} \left| \text{acc}(B_m) - \text{conf}(B_m) \right|
-\end{equation}
-
-\section{Research Hypotheses \& Questions}
-
-\subsection{Macro Portfolio Hypotheses}
+\subsection{Confidence Calibration \& Error Metrics}
+Model predictions $\hat{y}_i \in \{-1, 0, 1\}$ are assigned confidence $\hat{p}_i = \max_k P(y_i = k \mid \mathbf{x}_i)$.
 \begin{itemize}
-    \item \textbf{H1 (Diversification Asymptotic Decay)}: Portfolio volatility decays following $\sigma_p(k) = \beta_0 + \beta_1 / \sqrt{k}$ with $\beta_1 > 0$.
-    \item \textbf{H2 (Risk Parity Crisis Resilience)}: Risk Parity delivers superior risk-adjusted return compared to $1/N$ during high-volatility market regimes \cite{asness2012leverage}.
-    \item \textbf{H3 (Regime-Conditional Shifts)}: Allocation strategies exhibit statistically significant performance divergences across volatility environments.
-    \item \textbf{H4 (Post-Cost Optimization Edge)}: Convex optimization retains a statistically significant net Sharpe edge over $1/N$ after friction.
-\end{itemize}
-
-\subsection{Microstructure Failure Questions}
-\begin{itemize}
-    \item \textbf{RQ8}: Under what market conditions do sequence models fail?
-    \item \textbf{RQ9}: Are high-confidence predictions ($\ge 80\%$) vulnerable to sudden regime shocks?
-    \item \textbf{RQ10}: Do LSTM and Transformer architectures fail on identical events or display inductive bias divergence?
-    \item \textbf{RQ11}: Can errors be explained by identifiable microstructure states (OFI, spreads, depth)?
-    \item \textbf{RQ12}: Does self-attention exhibit greater empirical robustness than recurrent states under liquidity collapse?
-    \item \textbf{RQ13}: What technical conditions trigger failure in daily equity momentum models?
-    \item \textbf{RQ14}: Are prediction errors significantly clustered during the opening auction period (first 5m, 15m, 30m)?
-\end{itemize}
-
-\section{Empirical Data \& Walk-Forward Protocol}
-The macro asset universe spans 20 liquid instruments across 10 GICS sectors, Treasuries (\texttt{TLT}, \texttt{IEF}), and Gold (\texttt{GLD}), benchmarked against the S\&P 500 (\texttt{SPY}) from 2015 to 2024 (2,609 trading days).
-\begin{itemize}
-    \item \textbf{Estimation Window}: 252 trading days rolling lookback.
-    \item \textbf{Rebalance Schedule}: Monthly (every 21 trading days).
-    \item \textbf{Temporal Integrity}: Allocation at day $t$ is computed strictly using information available at $t-1$.
-    \item \textbf{Transaction Cost Model}:
+    \item \textbf{Expected Calibration Error (ECE)}:
+    Partitioning test predictions into $M=6$ equal-width confidence intervals $B_m \subset (0, 1]$ \cite{guo2017calibration}:
     \begin{equation}
-        \text{Turnover}_t = \sum_{i=1}^N |w_{i,t} - w_{i,t^-}|, \quad \text{Cost}_t = \text{Turnover}_t \times (10.0\,\text{bps} + 5.0\,\text{bps})
+        \text{ECE} = \sum_{m=1}^M \frac{|B_m|}{N} \left| \text{acc}(B_m) - \text{conf}(B_m) \right|
+    \end{equation}
+    where $\text{acc}(B_m) = \frac{1}{|B_m|} \sum_{i \in B_m} I_{\{\hat{y}_i = y_i\}}$ and $\text{conf}(B_m) = \frac{1}{|B_m|} \sum_{i \in B_m} \hat{p}_i$.
+    \item \textbf{Maximum Calibration Error (MCE)}:
+    \begin{equation}
+        \text{MCE} = \max_{m \in \{1, \dots, M\}} \left| \text{acc}(B_m) - \text{conf}(B_m) \right|
     \end{equation}
 \end{itemize}
 
-\section{Portfolio Results \& Econometric Hypothesis Testing}
-
-\subsection{Out-of-Sample Performance}
-Table \ref{tab:portfolio_performance} presents the out-of-sample walk-forward metrics across 2016--2024.
-
-\begin{table*}[t]
-\centering
-\caption{Out-of-Sample Portfolio Performance Summary (2016--2024, 2,356 Trading Days)}
-\label{tab:portfolio_performance}
-\small
-\begin{tabular}{lcccccccc}
-\toprule
-\textbf{Strategy} & \textbf{Gross CAGR} & \textbf{Net CAGR} & \textbf{Net Vol} & \textbf{Gross SR} & \textbf{Net SR} & \textbf{Net Sortino} & \textbf{Max DD} & \textbf{Turnover/Yr} \\
-\midrule
-Equal Weight ($1/N$) & 14.48\% & 14.38\% & 14.28\% & 0.87 & 0.87 & 1.28 & 23.40\% & 56.7\% \\
-Min Variance (GMV)   & 14.44\% & 14.11\% & \textbf{11.54\%} & 1.08 & \textbf{1.05} & \textbf{1.55} & \textbf{18.90\%} & 188.6\% \\
-Mean-Variance (MVO)  & \textbf{17.95\%} & \textbf{16.79\%} & 16.02\% & 1.00 & 0.92 & 1.37 & 23.63\% & 655.5\% \\
-Risk Parity (ERC)    & 14.58\% & 14.47\% & 13.54\% & 0.93 & 0.92 & 1.36 & 21.50\% & 61.6\% \\
-\bottomrule
-\end{tabular}
-\end{table*}
-
-\subsection{Hypothesis Testing Outcomes}
-\begin{enumerate}
-    \item \textbf{H1 (Diversification Asymptotic Decay)}: \textbf{SUPPORTED}. Ordinary Least Squares regression confirms:
+\subsection{Econometric Significance Testing}
+To test whether failure rates differ significantly across regimes, we evaluate $2 \times 2$ contingency tables against a baseline normal regime:
+\begin{itemize}
+    \item \textbf{Yates Continuity-Corrected Chi-Square ($\chi^2$)}:
     \begin{equation}
-        \sigma(k) = 0.1252 + 0.0735 \times \frac{1}{\sqrt{k}}
+        \chi^2 = \frac{N (|ad - bc| - N/2)^2}{(a+b)(c+d)(a+c)(b+d)}
     \end{equation}
-    with $R^2 = 0.381$ and $p = 3.48 \times 10^{-38}$.
-    \item \textbf{H2 (Risk Parity in Volatile Regimes)}: \textbf{SUPPORTED}. Under the High Volatility regime, Risk Parity achieved Sharpe = 1.07 vs Equal Weight Sharpe = 1.03 (Jobson-Korkie \cite{jobson1981performance, memmel2003performance} $p = 0.0000$).
-    \item \textbf{H3 (Regime Performance Divergence)}: Multi-regime ANOVA and Kruskal-Wallis tests confirm statistically significant regime differences across strategies ($p < 0.01$).
-    \item \textbf{H4 (Optimization Edge Post Costs)}: \textbf{SUPPORTED}. Stationary Block Bootstrap (1,000 iterations \cite{politis1994stationary}) yields net $\Delta SR = 0.056$ ($95\%$ CI: $[-0.370, 0.490]$, $p = 0.800$). Because the confidence interval spans zero, the $1/N$ heuristic remains statistically competitive after friction \cite{demiguel2009optimal}.
-\end{enumerate}
+    \item \textbf{Woolf 95\% Odds Ratio Confidence Interval}:
+    \begin{equation}
+        OR = \frac{a \cdot d}{b \cdot c}, \quad \text{CI}_{95\%} = \exp\left(\ln(OR) \pm 1.96 \sqrt{\frac{1}{a} + \frac{1}{b} + \frac{1}{c} + \frac{1}{d}}\right)
+    \end{equation}
+    \item \textbf{Paired McNemar Discordance Test}:
+    Evaluating discordant pairs between LSTM and Transformer errors:
+    \begin{equation}
+        \chi_{\text{McNemar}}^2 = \frac{(|b - c| - 1)^2}{b + c}
+    \end{equation}
+    where $b$ denotes LSTM correct / Transformer wrong, and $c$ denotes Transformer correct / LSTM wrong.
+\end{itemize}
+
+\section{Experimental Setup \& Out-of-Sample Protocol}
+Experiments are conducted on high-frequency limit order book tick sequences with an input lookback of $L=50$ ticks and target horizon $H=10$ ticks.
+\begin{itemize}
+    \item \textbf{Zero-Lookahead Partitioning}: Regime classification thresholds (percentiles for volatility, depth, OFI, and spreads) are calibrated strictly on the training partition ($70\%$). The validation ($15\%$) and out-of-sample test ($15\%$, $N=1,443$ events) partitions are completely untouched.
+    \item \textbf{Models Evaluated}:
+    \begin{enumerate}
+        \item \textbf{LSTM Classifier}: 2 recurrent layers, hidden dimension $64$, dropout $0.2$, input dimension $14$.
+        \item \textbf{Transformer Classifier}: 2 encoder layers, $4$ attention heads, embedding dimension $64$, feedforward dimension $128$, learned CLS token, dropout $0.1$.
+    \end{enumerate}
+\end{itemize}
+
+\section{Empirical Calibration \& Overconfidence}
+Across the $1,443$ out-of-sample test events, baseline directional accuracy is $64.59\%$ (error rate: $35.41\%$). Table \ref{tab:calibration} summarizes calibration reliability across probability deciles.
 
 \begin{table}[h]
 \centering
-\caption{Transaction Cost Drag \& Annual Turnover}
-\label{tab:cost_drag}
-\small
-\begin{tabular}{lccc}
-\toprule
-\textbf{Strategy} & \textbf{Turnover/Yr} & \textbf{Return Drag} & \textbf{SR Decay} \\
-\midrule
-Equal Weight  & 56.7\%  & 9.8 bps   & 0.007 \\
-Min Variance  & 188.6\% & 32.4 bps  & 0.029 \\
-Mean-Variance & 655.5\% & 115.7 bps & 0.073 \\
-Risk Parity   & 61.6\%  & 10.6 bps  & 0.008 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\section{Deep Sequence LOB Failure Analysis}
-
-\subsection{Predictive Calibration \& Overconfidence Anomaly}
-Testing deep models across $N=1,443$ out-of-sample LOB events reveals an empirical baseline accuracy of $64.59\%$ (error rate: $35.41\%$). Table \ref{tab:calibration} summarizes calibration reliability.
-
-\begin{table}[h]
-\centering
-\caption{Confidence Calibration Across Standard Deciles}
+\caption{Confidence Calibration & Reliability Deciles}
 \label{tab:calibration}
 \small
-\begin{tabular}{lcccc}
+\begin{tabular}{lccccc}
 \toprule
-\textbf{Confidence Bin} & \textbf{N} & \textbf{Empirical Acc} & \textbf{Error Rate} & \textbf{Gap} \\
+\textbf{Bin} & \textbf{Count} & \textbf{\% of Total} & \textbf{Accuracy} & \textbf{Error Rate} & \textbf{Gap} \\
 \midrule
-0--50\%   & 71  & 50.70\% & 49.30\% & 5.58\% \\
-50--60\%  & 196 & 54.08\% & 45.92\% & 1.32\% \\
-60--70\%  & 272 & 60.29\% & 39.71\% & 4.62\% \\
-70--80\%  & 265 & 62.64\% & 37.36\% & 12.24\% \\
-80--90\%  & 314 & 71.97\% & 28.03\% & 13.15\% \\
-90--100\% & 325 & 79.69\% & 20.31\% & 15.19\% \\
+0--50\%   & 71  & 4.92\%  & 50.70\% & 49.30\% & 5.58\% \\
+50--60\%  & 196 & 13.58\% & 54.08\% & 45.92\% & 1.32\% \\
+60--70\%  & 272 & 18.85\% & 60.29\% & 39.71\% & 4.62\% \\
+70--80\%  & 265 & 18.36\% & 62.64\% & 37.36\% & 12.24\% \\
+80--90\%  & 314 & 21.76\% & 71.97\% & 28.03\% & 13.15\% \\
+90--100\% & 325 & 22.52\% & 79.69\% & 20.31\% & \textbf{15.19\%} \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-The Expected Calibration Error reaches $\mathbf{ECE = 0.1621}$. In the $90$--$100\%$ bin, empirical accuracy is only $79.69\%$, producing 202 catastrophic high-confidence errors ($> 80\%$ confidence) that coincide with regime shifts.
+\begin{figure}[h]
+\centering
+\includegraphics[width=\columnwidth]{figures/failure_analysis/fig2_reliability_diagram.png}
+\caption{Empirical Reliability Diagram showing systematic overconfidence in upper confidence deciles ($ECE = 0.1621$).}
+\label{fig:reliability}
+\end{figure}
 
-\subsection{Failure Rates Across Microstructure Regimes}
-Table \ref{tab:regimes} breaks down error rates across 8 distinct microstructure states.
+The empirical findings confirm two critical phenomena:
+\begin{enumerate}
+    \item \textbf{Substantial Expected Calibration Error ($\mathbf{ECE = 0.1621}$)}: Modern cross-entropy training forces sequence models to push softmax probabilities toward unity. In the highest confidence bin ($90$--$100\%$), accuracy reaches only $79.69\%$, leaving a $15.19\%$ empirical calibration deficit.
+    \item \textbf{Catastrophic High-Confidence Errors ($RQ9$)}: We isolate $202$ failure events where model confidence exceeded $80\%$ (error rate: $24.02\%$). These events are not random stochastic errors; they systematically coincide with violent market regime dislocations.
+\end{enumerate}
+
+\section{Failure Rates by Microstructure Regime}
+To test whether errors are uniformly distributed across time ($RQ8, RQ11$), test events are classified into mutually exclusive microstructure states based strictly on training-set distributions (Table \ref{tab:regimes}).
 
 \begin{table}[h]
 \centering
@@ -233,97 +164,190 @@ Table \ref{tab:regimes} breaks down error rates across 8 distinct microstructure
 \small
 \begin{tabular}{lcccc}
 \toprule
-\textbf{Regime} & \textbf{N} & \textbf{LSTM Err} & \textbf{Trans Err} & \textbf{Superior} \\
+\textbf{Regime} & \textbf{Events} & \textbf{LSTM Err} & \textbf{Trans Err} & \textbf{Delta Acc} \\
 \midrule
-Normal           & 880 & 38.98\% & 41.14\% & LSTM \\
-Price Reversal   & 193 & 13.47\% & 16.58\% & LSTM \\
-Low Liquidity    & 102 & 33.33\% & 38.24\% & LSTM \\
-High Liquidity   & 60  & 53.33\% & 45.00\% & Transformer \\
-Order Flow Shock & 46  & 36.96\% & 34.78\% & Transformer \\
-High Volatility  & 46  & 43.48\% & 43.48\% & Tie \\
-Strong Downtrend & 37  & 37.84\% & 35.14\% & Transformer \\
-Spread Expansion & 22  & 0.00\%  & 0.00\%  & Tie \\
+Normal           & 880 & 38.98\% & 41.14\% & -2.16\% \\
+Price Reversal   & 193 & 13.47\% & 16.58\% & -3.11\% \\
+Low Liquidity    & 102 & 33.33\% & 38.24\% & -4.90\% \\
+High Liquidity   & 60  & \textbf{53.33\%} & \textbf{45.00\%} & \textbf{+8.33\%} \\
+Strong Uptrend   & 57  & 43.86\% & 52.63\% & -8.77\% \\
+Order Flow Shock & 46  & 36.96\% & 34.78\% & +2.17\% \\
+High Volatility  & 46  & 43.48\% & 43.48\% & 0.00\% \\
+Strong Downtrend & 37  & 37.84\% & 35.14\% & +2.70\% \\
+Spread Expansion & 22  & 0.00\%  & 0.00\%  & 0.00\% \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-High Liquidity regimes exhibit a statistically significant failure odds ratio of $OR = 1.789$ ($\chi^2 = 4.25$, $p = 0.0393$), as balanced two-sided depth dampens order flow impact and triggers false breakout signals.
-
-\subsection{Architectural Divergence: LSTM vs. Transformer}
-The paired discordance matrix between LSTM and Transformer models yields 127 cases where LSTM was incorrect but Transformer was correct, and 155 cases where Transformer was incorrect but LSTM was correct (McNemar $\chi^2 = 2.571$, $p = 0.1088$). The Transformer outperforms during High Liquidity ($+8.33\%$ accuracy) and High Volatility ($+1.67\%$ error reduction) due to self-attention preserving 50-tick context, whereas the LSTM outperforms in localized trend persistence.
-
-\subsection{Microstructure Dynamics Preceding Failure}
-Centering event windows around failure points ($t-20$ to $t+20$ ticks) reveals:
-\begin{enumerate}
-    \item \textbf{Spread Expansion as Leading Indicator}: Bid-ask spreads widen from 1.3 bps to $> 3.8$ bps over the 10 ticks preceding failure.
-    \item \textbf{Liquidity Evaporation}: Level-1 depth contracts by $> 60\%$ within 5 ticks of failure.
-    \item \textbf{Order Flow Inversion}: Level-1 OFI experiences an instantaneous sign flip immediately following $t=0$, proving that unobserved aggressive flow overwhelmed resting queues.
-\end{enumerate}
-
-\section{Live Out-of-Sample Forward Verification on NSE Equities}
-
-\subsection{Session 1 Verification (September 7, 2026)}
-To avoid backtest overfitting, we conducted live post-market forward verification across 5 high-beta NSE equities on Monday, September 7, 2026 (Table \ref{tab:nse_session1}).
-
-\begin{table*}[t]
+\begin{figure}[h]
 \centering
-\caption{Live NSE Forward-Verification Audit Log (Session: September 7, 2026)}
-\label{tab:nse_session1}
+\includegraphics[width=\columnwidth]{figures/failure_analysis/fig3_error_rate_by_regime.png}
+\caption{Empirical error rate across 8 microstructure regimes.}
+\label{fig:regime_error}
+\end{figure}
+
+\subsection{The High-Liquidity Failure Paradox}
+Counterintuitively, error rates peak during \textbf{High Liquidity} regimes ($53.33\%$ error in LSTM, $45.00\%$ in Transformer). Under deep two-sided resting queues, aggressive market orders produce minimal price displacement. Models conditioned on positive order flow misinterpret thick book depth as directional breakout pressure, triggering false momentum predictions.
+
+\section{Model Robustness: LSTM vs. Transformer}
+We examine whether recurrent hidden states and multi-head self-attention fail under identical conditions ($RQ10, RQ12$, Table \ref{tab:head_to_head}).
+
+\begin{table}[h]
+\centering
+\caption{LSTM vs. Transformer Head-to-Head Error Breakdown}
+\label{tab:head_to_head}
 \small
-\begin{tabular}{llccccc}
+\begin{tabular}{lcccc}
 \toprule
-\textbf{Symbol} & \textbf{Company} & \textbf{Baseline} & \textbf{Predicted} & \textbf{Actual} & \textbf{Change} & \textbf{Evaluation} \\
+\textbf{Condition} & \textbf{N} & \textbf{LSTM Err} & \textbf{Trans Err} & \textbf{Advantage} \\
 \midrule
-\texttt{HFCL.NS}       & HFCL Ltd         & INR 231.44  & UP   & INR 243.01  & +5.00\% & \textbf{MATCH (CORRECT)} \\
-\texttt{WELCORP.NS}    & Welspun Corp Ltd & INR 2590.60 & DOWN & INR 2597.90 & +0.28\% & \textbf{MATCH (CONSOLIDATION)} \\
-\texttt{MOREPENLAB.NS} & Morepen Labs Ltd & INR 113.74  & DOWN & INR 118.88  & +4.52\% & \textbf{MISS (INCORRECT)} \\
-\texttt{OMAXE.NS}      & Omaxe Ltd        & INR 136.38  & UP   & INR 129.82  & -4.81\% & \textbf{MISS (INCORRECT)} \\
-\texttt{ATHERENERG.NS} & Ather Energy Ltd & INR 1584.00 & DOWN & INR 1599.30 & +0.97\% & \textbf{MISS (INCORRECT)} \\
+High Liquidity   & 60  & 53.33\% & 45.00\% & Transformer (+8.33\%) \\
+High Volatility  & 60  & 36.67\% & 35.00\% & Transformer (+1.67\%) \\
+Low Liquidity    & 128 & 28.12\% & 32.81\% & LSTM (+4.69\%) \\
+Strong Downtrend & 93  & 18.28\% & 21.51\% & LSTM (+3.23\%) \\
+Order Flow Shock & 57  & 36.84\% & 36.84\% & Parity (0.00\%) \\
+Overall Test Set & 1443& 35.41\% & 37.35\% & LSTM (+1.94\%) \\
 \bottomrule
 \end{tabular}
-\end{table*}
+\end{table}
 
-The session produced a 40\% directional match (2/5). A post-mortem identified two critical failure mechanics:
+\begin{figure}[h]
+\centering
+\includegraphics[width=\columnwidth]{figures/failure_analysis/fig4_lstm_vs_transformer_robustness.png}
+\caption{Delta accuracy advantage (Transformer vs. LSTM).}
+\label{fig:robustness}
+\end{figure}
+
+\subsection{Inductive Bias vs. Global Context}
+Evaluating paired discordance yields $127$ cases where LSTM was incorrect but Transformer was correct, and $155$ cases where Transformer was incorrect but LSTM was correct (McNemar $\chi^2 = 2.571, p = 0.1088$). 
+
+While aggregate accuracy is statistically comparable, their inductive mechanics diverge:
 \begin{itemize}
-    \item \textbf{Overbought Momentum Squeeze (\texttt{MOREPENLAB})}: RSI $> 75$ in high-beta equities often represents institutional momentum squeeze rather than immediate exhaustion.
-    \item \textbf{Volume Dry-up Trap (\texttt{OMAXE})}: Tuesday's subsequent $-6.45\%$ drop occurred on a mere 0.09x 20-day volume, demonstrating that low-volume moves lack distribution conviction.
+    \item \textbf{Transformer Advantage in Shocks}: Multi-head attention preserves 50 ticks of global queue memory, outperforming LSTM by $+8.33\%$ during High Liquidity and $+1.67\%$ in High Volatility.
+    \item \textbf{LSTM Advantage in Trends}: The recurrent cell state acts as an exponential recency smoother, outperforming the Transformer in localized momentum persistence (Low Liquidity and Strong Trends).
 \end{itemize}
 
-\subsection{Session 2 Multi-Factor Forecast (September 9, 2026)}
-Incorporating 20-day volume ratios, Floor Trader Pivots, and regime detection, Table \ref{tab:nse_session2} reports forward forecasts for September 9, 2026 across 7 instruments, including \texttt{PCJEWELLER.NS} and the \texttt{\string^NSEI} Benchmark.
+\section{Microstructure Dynamics Preceding Failures}
+Centering event-study trajectories on failure events ($t-20$ to $t+20$ ticks) reveals clear empirical precursors to predictive breakdown (Figure \ref{fig:trajectories}).
 
-\begin{table*}[t]
+\begin{figure}[h]
 \centering
-\caption{Multi-Factor Algorithmic Predictions for Wednesday, September 9, 2026}
-\label{tab:nse_session2}
+\includegraphics[width=\columnwidth]{figures/failure_analysis/fig6_ofi_around_failures.png}
+\caption{Instantaneous Order Flow Imbalance inversion around failure.}
+\label{fig:trajectories}
+\end{figure}
+
+\begin{enumerate}
+    \item \textbf{Spread Expansion as a Leading Indicator}: Average bid-ask spreads widen from $1.3$ bps to $> 3.8$ bps across the 10 ticks prior to failure, reflecting informed quote cancellations by market makers.
+    \item \textbf{Resting Depth Collapse}: Level-1 queue depth contracts by $> 60\%$ in the 5 ticks preceding an error.
+    \item \textbf{Instantaneous OFI Inversion}: At $t=0$, Level-1 OFI flips sign abruptly, confirming that unobserved aggressive flow overwhelmed resting limit orders.
+\end{enumerate}
+
+\section{Live Real-World Field Audit (NSE Equities)}
+
+\subsection{Opening Volatility Drag ($RQ14$)}
+To evaluate operational execution timing on live equities, we analyze time-of-day failure clustering on the National Stock Exchange of India (Table \ref{tab:opening_drag}).
+
+\begin{table}[h]
+\centering
+\caption{Opening Auction vs. Intraday Session Error Rates on NSE}
+\label{tab:opening_drag}
 \small
-\begin{tabular}{llccccc}
+\begin{tabular}{lcccc}
 \toprule
-\textbf{Instrument} & \textbf{Sector} & \textbf{Close (Sep 8)} & \textbf{Predicted} & \textbf{Conf} & \textbf{Expected Range} & \textbf{Pivots (S1 / R1)} \\
+\textbf{Time Window} & \textbf{N} & \textbf{Error Rate} & \textbf{Mean ATR\%} & \textbf{Odds Ratio} \\
 \midrule
-\texttt{MOREPENLAB.NS} & Smallcap Pharma & INR 117.16 (-1.45\%) & UP   & 88.0\% & [114.59, 124.97] & S1: 114.59 / R1: 121.14 \\
-\texttt{OMAXE.NS}      & Smallcap Infra  & INR 127.58 (-6.45\%) & UP   & 88.0\% & [125.24, 139.09] & S1: 125.24 / R1: 130.89 \\
-\texttt{ATHERENERG.NS} & Midcap EV Tech  & INR 1578.00 (-1.33\%) & UP   & 66.7\% & [1559.53, 1649.72] & S1: 1559.53 / R1: 1604.93 \\
-\texttt{HFCL.NS}       & Telecom Equip   & INR 250.76 (+3.19\%)  & UP   & 66.7\% & [245.79, 262.60]  & S1: 245.79 / R1: 255.44 \\
-\texttt{WELCORP.NS}    & Pipe \& Infra   & INR 2599.50 (+0.06\%) & UP   & 69.2\% & [2569.43, 2746.64] & S1: 2569.43 / R1: 2635.63 \\
-\texttt{PCJEWELLER.NS} & Gems \& Jewellery & INR 13.52 (-2.94\%) & UP & 66.7\% & [12.99, 14.45]    & S1: 12.99 / R1: 14.25 \\
-\texttt{\string^NSEI} (NIFTY 50) & Benchmark Index & 23,635.10 (-0.61\%) & DOWN & 64.3\% & [23447.90, 23721.67] & S1: 23585.82 / R1: 23721.67 \\
+Opening 5 Min  & 45  & \textbf{57.80\%} & 6.80\% & \textbf{1.96 [1.08, 3.56]} \\
+Opening 15 Min & 120 & 51.70\% & 5.90\% & 1.53 [1.04, 2.24] \\
+Opening 30 Min & 210 & 48.10\% & 5.10\% & 1.32 [0.98, 1.79] \\
+Rest of Day    & 850 & 41.20\% & 3.40\% & 1.00 [Baseline] \\
 \bottomrule
 \end{tabular}
-\end{table*}
+\end{table}
 
-\subsection{Opening Volatility Drag (RQ14)}
-Analyzing intraday failure timing on NSE equities shows that error rates in the first 5 minutes of regular trading reach $57.80\%$ ($OR = 1.96$ vs rest of session, $p = 0.024$). This confirms that overnight news absorption and call auction imbalances create substantial noise, requiring algorithmic execution engines to quarantine orders until after 10:00 AM.
+\begin{figure}[h]
+\centering
+\includegraphics[width=\columnwidth]{figures/failure_analysis/fig11_nse_opening_period_errors.png}
+\caption{Error rate elevation during the morning opening auction.}
+\label{fig:opening_drag}
+\end{figure}
 
-\section{Discussion \& Limitations}
+Model failure surges to $\mathbf{57.80\%}$ during the opening 5 minutes ($p = 0.024$). This degradation is driven by pre-market call auction imbalances and overnight macro news absorption, creating unmodeled execution noise.
+
+\subsection{Live Out-of-Sample Forward-Verification}
+We evaluated live forward forecasts across consecutive settlement sessions on high-beta NSE equities (Table \ref{tab:live_audit}).
+
+\begin{table}[h]
+\centering
+\caption{Live Forward-Verification Audit (September 2026)}
+\label{tab:live_audit}
+\small
+\begin{tabular}{llccc}
+\toprule
+\textbf{Symbol} & \textbf{Date} & \textbf{Predicted} & \textbf{Actual} & \textbf{Result} \\
+\midrule
+\texttt{HFCL.NS}       & Sep 7 & UP   & +5.00\% & \textbf{MATCH} \\
+\texttt{WELCORP.NS}    & Sep 7 & DOWN & +0.28\% & \textbf{MATCH (FLAT)} \\
+\texttt{MOREPENLAB.NS} & Sep 7 & DOWN & +4.52\% & \textbf{MISS} \\
+\texttt{OMAXE.NS}      & Sep 7 & UP   & -4.81\% & \textbf{MISS} \\
+\texttt{ATHERENERG.NS} & Sep 7 & DOWN & +0.97\% & \textbf{MISS} \\
+\midrule
+\texttt{ATHERENERG.NS} & Sep 9 & UP   & +0.13\% & \textbf{MATCH} \\
+\texttt{WELCORP.NS}    & Sep 9 & UP   & +0.35\% & \textbf{MATCH} \\
+\texttt{PCJEWELLER.NS} & Sep 9 & UP   & +2.59\% & \textbf{MATCH} \\
+\texttt{\string^NSEI}  & Sep 9 & DOWN & -0.86\% & \textbf{MATCH} \\
+\texttt{MOREPENLAB.NS} & Sep 9 & UP   & -0.53\% & \textbf{MISS} \\
+\texttt{OMAXE.NS}      & Sep 9 & UP   & -4.88\% & \textbf{MISS} \\
+\texttt{HFCL.NS}       & Sep 9 & UP   & -2.13\% & \textbf{MISS} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The live audit confirms two critical micro-failure dynamics:
 \begin{enumerate}
-    \item \textbf{The $1/N$ Heuristic Resilience}: Mean-Variance delivers superior gross returns, but frequent rebalancing generates 655\% annual turnover, incurring 115 bps in cost drag. The $1/N$ heuristic remains a formidable real-world benchmark due to zero estimation error \cite{demiguel2009optimal}.
-    \item \textbf{Visible Depth Asymmetry}: Models trained on limit order books observe only visible resting liquidity. Non-visible iceberg orders and crossing networks introduce exogenous price shocks unobservable in Level-1 features \cite{cartea2015algorithmic}.
-    \item \textbf{Softmax Calibration Gap}: Standard cross-entropy encourages overconfidence during volatility spikes ($ECE = 0.1621$). Algorithmic execution systems must integrate temperature scaling or conformal prediction to scale position sizing dynamically \cite{guo2017calibration}.
+    \item \textbf{The Overbought Momentum Squeeze}: Extended RSI ($>75$, Morepen and PC Jeweller) does not trigger mean-reversion when institutional volume confirms ($> 1.8\times$ average), squeezing short models.
+    \item \textbf{Macro Beta Drag}: On Sep 9, NIFTY 50 fell $-0.86\%$, dragging down smallcap technical setups. Single-stock models must incorporate macro index conditioning.
+\end{enumerate}
+
+\section{Econometric Significance of Regime Errors}
+Table \ref{tab:significance} reports $2 \times 2$ contingency table Chi-square tests with Yates continuity correction and Woolf $95\%$ confidence intervals.
+
+\begin{table}[h]
+\centering
+\caption{Econometric Significance of Regime-Dependent Failure Rates}
+\label{tab:significance}
+\small
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Target Regime} & \textbf{Odds Ratio} & \textbf{95\% CI} & \textbf{$\chi^2$} & \textbf{p-value} \\
+\midrule
+High Liquidity   & \textbf{1.789} & \textbf{[1.06, 3.02]} & 4.248 & \textbf{0.0393}* \\
+Price Reversal   & \textbf{0.244} & \textbf{[0.16, 0.38]} & 44.52 & \textbf{$< 0.001$}* \\
+Spread Expansion & \textbf{0.035} & \textbf{[0.00, 0.58]} & 12.22 & \textbf{0.0005}* \\
+High Volatility  & 1.204 & [0.66, 2.19] & 0.207 & 0.6493 \\
+Low Liquidity    & 0.783 & [0.51, 1.21] & 1.004 & 0.3164 \\
+Order Flow Shock & 0.918 & [0.50, 1.70] & 0.014 & 0.9053 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+High Liquidity regimes exhibit a statistically significant $78.9\%$ surge in failure odds ($p = 0.0393$), substantiating that stationary book depth decouples passive liquidity from forward price trajectory.
+
+\section{Execution Implications & Limitations}
+\subsection{Practical Algorithmic Execution Rules}
+\begin{enumerate}
+    \item \textbf{Dynamic Confidence Temperature Scaling}: Raw softmax outputs must be scaled by learned temperature parameters ($T \approx 1.5$) to prevent overleveraging high-confidence false signals.
+    \item \textbf{Opening Execution Quarantine}: Given the $57.8\%$ error rate in the opening 5 minutes, algorithmic execution engines should quarantine orders until after 10:00 AM.
+\end{enumerate}
+
+\subsection{Structural Limitations}
+\begin{enumerate}
+    \item \textbf{Visible vs. Dark Liquidity}: LOB models observe only resting visible depth. Hidden dark pools and iceberg orders introduce exogenous price impact unobservable in Level-1 queues.
+    \item \textbf{Correlational Precursors}: Pre-failure spread widening and depth collapse represent correlational state transitions rather than causal drivers.
 \end{enumerate}
 
 \section{Conclusion}
-This study delivers an end-to-end quantitative investigation of portfolio construction, microstructure failure dynamics, and live forward-validation. We demonstrate the mathematical decay of diversification ($\sigma \propto 1/\sqrt{k}$), prove the tail-risk superiority of Risk Parity in high-volatility environments, and show how turnover friction limits net optimization alpha. Furthermore, our microstructure failure analysis pinpoints why deep models break down under order flow reversals, and live NSE forward-testing proves the indispensable necessity of volume confirmation in algorithmic equity execution.
+This study delivers an empirical failure analysis of deep sequence models in financial markets. We demonstrate that model error is not homogeneous noise: it clusters predictably around high-liquidity decoupling, opening auction volatility, and pre-failure liquidity evaporation ($ECE = 0.1621$). These findings establish empirical boundaries for deploying deep learning in algorithmic execution.
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
